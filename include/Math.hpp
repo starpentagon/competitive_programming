@@ -68,6 +68,32 @@ vector<long long> EnumerateDivisors(long long N) {
 }
 // [End] Enumerate Divisors
 
+// [Start] Power of n
+// [Prefix] pow-func
+// [Verified] n^m, n<=100, m<=10^9, NTL_1_B(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=NTL_1_B&lang=ja)
+// 繰り返し二乗法でx^nを求める
+// 計算量: O(log n)
+// @note 0^0は不定値のためassertを入れている
+template <class T>
+T ipow(T x, long long n) {
+   assert(!(x == 0 && n == 0));
+
+   T val = 1;
+
+   while (n > 0) {
+      if ((n & 1LL) == 1) {
+         // iビット目が1の場合、x^(2^i)をかける
+         val *= x;
+      }
+
+      x *= x;
+      n = n >> 1;
+   }
+
+   return val;
+}
+// [End] Power of n
+
 // [Start] GCD
 // [Prefix] gcd-func
 // 最大公約数を求める

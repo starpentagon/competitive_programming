@@ -62,3 +62,8 @@ TEST(MathTest, TestEnumerateDivisors) {
       ASSERT_EQ(200560490131LL, list[1]);
    }
 }
+
+TEST(MathTest, TestPower) {
+   EXPECT_EQ(1, ipow(1, numeric_limits<long long>::max()));
+   EXPECT_EQ(1024, ipow(2, 10));
+}
