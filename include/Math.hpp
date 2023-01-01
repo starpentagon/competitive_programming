@@ -29,6 +29,43 @@ bool IsPrime(const long long N) {
 }
 // [End] IsPrime
 
+// [Start] Prime factorization of a specific N
+// [Prefix] prime-factorization-func
+// [Verified] n<=10^12, ABC_280「D - Factorial and Multiple」(https://atcoder.jp/contests/abc280/tasks/abc280_d)
+// 素因数分解を行う
+// @note N=prod p_i ^ k_iに分解し(p_i, k_i)のリストに記録する
+// 計算量: O(sqrt{N})
+vector<pair<long long, long long>> PrimeFactorization(long long N) {
+   assert(N >= 2);
+
+   vector<pair<long long, long long>> factorization;
+
+   // sqrt{N}以下の数で分解
+   for (long long p = 2; p * p <= N; p++) {
+      if (N % p != 0) {
+         continue;
+      }
+
+      // 割れる限り割り続ける
+      long long n = 0;
+
+      while (N % p == 0) {
+         n++;
+         N /= p;
+      }
+
+      factorization.emplace_back(p, n);
+   }
+
+   // 残りの因数pがあったとするとそれは素数でp^1の形になる。
+   if (N != 1) {
+      factorization.emplace_back(N, 1);
+   }
+
+   return factorization;
+}
+// [End] Prime factorization of a specific N
+
 // [Start] Enumerate Divisors
 // [Prefix] enum-divisors-func
 // 正の整数Nのすべての約数を求める
@@ -409,7 +446,7 @@ long long CalcExponentOfN(long long p, long long N) {
 
 // [Start] exponent of factorial
 // [Prefix] exponent-factorial-func
-// ToDo: 素因数分解を実装後にVerify https://atcoder.jp/contests/abc280/tasks/abc280_d
+// [Verified] n<=10^12, ABC_280「D - Factorial and Multiple」(https://atcoder.jp/contests/abc280/tasks/abc280_d)
 // N!の素数pの指数部を求める
 // @note ルジャンドルの定理に基づく
 // @note 計算量: O(log N)

@@ -4,12 +4,17 @@
 
 ## 素数判定
 
-* Prefix: is-prime
+* Prefix: is-prime-func
 * Description: 与えられた整数Nが素数かどうかを判定する
 * 計算量: $O(\sqrt{N})$
 
+## 素因数分解
+* Prefix: prime-fact
+* Description: $N$の素因数分解を行う
+* 計算量: $O(\sqrt{N})$
+
 ## 約数列挙
-* Prefix: enum-divisors
+* Prefix: enum-divisors-func
 * Description: 与えられた整数Nの約数を列挙する
 * 計算量: $O(\sqrt{N})$
 

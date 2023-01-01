@@ -161,3 +161,23 @@ TEST(MathTest, TestExponentOfFactorial) {
    EXPECT_EQ(1, CalcExponentOfFactorial(5, 5));
    EXPECT_EQ(0, CalcExponentOfFactorial(7, 5));
 }
+
+TEST(MathTest, TestPrimeFactorization) {
+   using P = pair<long long, long long>;
+
+   {
+      int N = 2;
+      auto list = PrimeFactorization(N);
+
+      ASSERT_EQ(1, list.size());
+      EXPECT_EQ(P(2, 1), list[0]);
+   }
+   {
+      int N = 68;
+      auto list = PrimeFactorization(N);
+
+      ASSERT_EQ(2, list.size());
+      EXPECT_EQ(P(2, 2), list[0]);
+      EXPECT_EQ(P(17, 1), list[1]);
+   }
+}
