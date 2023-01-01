@@ -29,14 +29,19 @@
 * 計算量: $O(\log(\max\{m, n\}))$
 
 ## 組合せ数(DP版)
-* Prefix: comb-dp
+* Prefix: comb-dp-class
 * Description: 組合せ数を求める。N=2000程度まで適用可能
 * 計算量: O(N^2)
 
 ## 組合せ数(Mod版)
-* Prefix: comb-mod
+* Prefix: comb-mod-class
 * Description: 組合せ数のMODを求める。Modは素数でMod > Nを仮定。N=10^7程度まで適用可能
 * 計算量: O(N)
+
+## 有理数/分数
+* Prefix: frac-class
+* Description: 有理数を管理する
+* 計算量: O(1), 通分をする場合は O(log min(a, b))
 
 # ModIntライブラリ(ModInt.code-snippets)
 ## MODをコンパイル時に指定

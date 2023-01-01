@@ -80,3 +80,72 @@ TEST(MathTest, TestCombDP) {
    EXPECT_EQ(0, comb_tbl.get(0, -1));
    EXPECT_EQ(1000 * 999 * 998 / 6, comb_tbl.get(1000, 3));
 }
+
+TEST(MathTest, TestFraction) {
+   // 比較演算子
+   {
+      Fraction a(1, 3), b(1, 2);
+      EXPECT_TRUE(a < b);
+   }
+
+   // 通分
+   {
+      Fraction a(12, 16, true);
+      EXPECT_EQ(3, a.get_num());
+      EXPECT_EQ(4, a.get_denom());
+   }
+
+   // 足し算
+   {
+      Fraction a(1, 3), b(1, 2);
+      a += b;
+      EXPECT_EQ(Fraction(5, 6), a);
+   }
+   {
+      Fraction a(2, 3), b(5, 9);
+      auto c = a + b;
+      EXPECT_EQ(Fraction(11, 9), c);
+   }
+
+   // 引き算
+   {
+      Fraction a(1, 3), b(1, 2);
+      a -= b;
+      EXPECT_EQ(Fraction(-1, 6), a);
+   }
+   {
+      Fraction a(2, 3);
+      auto c = a - a;
+      EXPECT_EQ(Fraction(0, 3), c);
+   }
+
+   // 掛け算
+   {
+      Fraction a(1, 3), b(1, 2);
+      a *= b;
+      EXPECT_EQ(Fraction(1, 6), a);
+   }
+   {
+      Fraction a(2, 3), b(4, 7);
+      auto c = a * b;
+      EXPECT_EQ(Fraction(8, 21), c);
+   }
+
+   // 割り算
+   {
+      Fraction a(1, 3), b(1, 2);
+      a /= b;
+      EXPECT_EQ(Fraction(2, 3), a);
+   }
+   {
+      Fraction a(2, 3), b(0, 2);
+      a /= b;
+      EXPECT_EQ(1, a.get_num());
+      EXPECT_EQ(0, a.get_denom());
+   }
+   {
+      Fraction a(2, 3), b(4, 7);
+      auto c = a / b;
+      EXPECT_EQ(Fraction(7, 6), c);
+   }
+}

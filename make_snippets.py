@@ -56,7 +56,7 @@ for key in snippets.keys():
    print('\t"body": [')
 
    for l in snippets[key]:
-      print('\t\t"{}",'.format(l))
+      print('\t\t"{}",'.format(l.replace('"', '\\"')))
 
    print('\t],')
    print('\t"description": "{}"'.format(key))
