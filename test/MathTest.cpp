@@ -20,3 +20,45 @@ TEST(MathTest, TestLCM) {
       EXPECT_EQ(998244353LL * 1000000007, LCM(a, b));
    }
 }
+
+TEST(MathTest, TestIsPrime) {
+   EXPECT_FALSE(IsPrime(1));
+   EXPECT_TRUE(IsPrime(2));
+   EXPECT_TRUE(IsPrime(3));
+   EXPECT_FALSE(IsPrime(4));
+   EXPECT_TRUE(IsPrime(5));
+   EXPECT_TRUE(IsPrime(998244353LL));
+   EXPECT_FALSE(IsPrime(99991LL * 99991));
+   EXPECT_TRUE(IsPrime(200560490131LL));
+}
+
+TEST(MathTest, TestEnumerateDivisors) {
+   {
+      auto list = EnumerateDivisors(1);
+      ASSERT_EQ(1, list.size());
+      ASSERT_EQ(1, list[0]);
+   }
+   {
+      auto list = EnumerateDivisors(12);
+      ASSERT_EQ(6, list.size());
+      ASSERT_EQ(1, list[0]);
+      ASSERT_EQ(2, list[1]);
+      ASSERT_EQ(3, list[2]);
+      ASSERT_EQ(4, list[3]);
+      ASSERT_EQ(6, list[4]);
+      ASSERT_EQ(12, list[5]);
+   }
+   {
+      auto list = EnumerateDivisors(99991LL * 99991);
+      ASSERT_EQ(3, list.size());
+      ASSERT_EQ(1, list[0]);
+      ASSERT_EQ(99991LL, list[1]);
+      ASSERT_EQ(99991LL * 99991LL, list[2]);
+   }
+   {
+      auto list = EnumerateDivisors(200560490131LL);
+      ASSERT_EQ(2, list.size());
+      ASSERT_EQ(1, list[0]);
+      ASSERT_EQ(200560490131LL, list[1]);
+   }
+}
