@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# test case
+verify/*/*/test
+
+# VScode setting
+.vscode
