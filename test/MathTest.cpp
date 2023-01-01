@@ -67,3 +67,16 @@ TEST(MathTest, TestPower) {
    EXPECT_EQ(1, ipow(1, numeric_limits<long long>::max()));
    EXPECT_EQ(1024, ipow(2, 10));
 }
+
+TEST(MathTest, TestCombDP) {
+   CombTable comb_tbl(1000);
+
+   EXPECT_EQ(1, comb_tbl.get(10, 0));
+   EXPECT_EQ(10, comb_tbl.get(10, 1));
+   EXPECT_EQ(1, comb_tbl.get(10, 0));
+   EXPECT_EQ(0, comb_tbl.get(10, 11));
+   EXPECT_EQ(1, comb_tbl.get(0, 0));
+   EXPECT_EQ(0, comb_tbl.get(-1, 0));
+   EXPECT_EQ(0, comb_tbl.get(0, -1));
+   EXPECT_EQ(1000 * 999 * 998 / 6, comb_tbl.get(1000, 3));
+}

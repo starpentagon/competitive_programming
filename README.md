@@ -28,6 +28,16 @@
 * Description: 整数m, nの最小公倍数を求める
 * 計算量: $O(\log(\max\{m, n\}))$
 
+## 組合せ数(Mod版)
+* Prefix: comb-mod
+* Description: 組合せ数のMODを求める。Modは素数でMod > Nを仮定。N=10^7程度まで適用可能
+* 計算量: O(N)
+
+## 組合せ数(DP版)
+* Prefix: comb-dp
+* Description: 組合せ数を求める。N=2000程度まで適用可能
+* 計算量: O(N^2)
+
 # ModIntライブラリ(ModInt.code-snippets)
 ## MODをコンパイル時に指定
 * Prefix: mod-int-static-class
