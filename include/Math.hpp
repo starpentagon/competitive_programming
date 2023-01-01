@@ -388,8 +388,46 @@ class Fraction {
 };
 // [End] Fraction
 
-// [Start] Fraction
-// [Prefix] fraction-class
+// [Start] exponent of N
+// [Prefix] exponent-N-func
 // Nの素数pの指数部を求める
 // @note 計算量: O(log N), Nの素因数の指数部の合計がlog Nで抑えられる
-// [End] Fraction
+// Nの素数pの指数部を求める
+// @note 計算量: O(log N), Nの素因数の指数部の合計がlog Nで抑えられる
+long long CalcExponentOfN(long long p, long long N) {
+   assert(p >= 2);
+   long long cnt = 0;
+
+   while (N >= p && (N % p) == 0) {
+      cnt++;
+      N /= p;
+   }
+
+   return cnt;
+}
+// [End] exponent of N
+
+// [Start] exponent of factorial
+// [Prefix] exponent-factorial-func
+// ToDo: 素因数分解を実装後にVerify https://atcoder.jp/contests/abc280/tasks/abc280_d
+// N!の素数pの指数部を求める
+// @note ルジャンドルの定理に基づく
+// @note 計算量: O(log N)
+long long CalcExponentOfFactorial(long long p, long long N) {
+   assert(p >= 2);
+   long long cnt = 0;
+   long long q = p;
+
+   while (N >= q) {
+      cnt += N / q;
+
+      if (N / q < p) {
+         break;
+      }
+
+      q *= p;
+   }
+
+   return cnt;
+}
+// [End] exponent of factorial

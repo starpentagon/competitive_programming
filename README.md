@@ -38,6 +38,16 @@
 * Description: 組合せ数のMODを求める。Modは素数でMod > Nを仮定。N=10^7程度まで適用可能
 * 計算量: O(N)
 
+## 指数部の計算
+* Prefix: exponent-N-func
+* Description: Nの素数pの指数部を求める
+* 計算量: O(log N), Nの素因数の指数部の合計がlog Nで抑えられる
+
+## 指数部の計算
+* Prefix: exponent-factorial-func
+* Description: N!の素数pの指数部を求める(ルジャンドルの定理に基づく)
+* 計算量: O(log N)
+
 ## 有理数/分数
 * Prefix: frac-class
 * Description: 有理数を管理する

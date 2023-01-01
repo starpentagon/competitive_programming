@@ -149,3 +149,15 @@ TEST(MathTest, TestFraction) {
       EXPECT_EQ(Fraction(7, 6), c);
    }
 }
+
+TEST(MathTest, TestExponentOfN) {
+   EXPECT_EQ(10, CalcExponentOfN(2, 1024));
+   EXPECT_EQ(0, CalcExponentOfN(3, 1024));
+}
+
+TEST(MathTest, TestExponentOfFactorial) {
+   EXPECT_EQ(3, CalcExponentOfFactorial(2, 5));
+   EXPECT_EQ(1, CalcExponentOfFactorial(3, 5));
+   EXPECT_EQ(1, CalcExponentOfFactorial(5, 5));
+   EXPECT_EQ(0, CalcExponentOfFactorial(7, 5));
+}
