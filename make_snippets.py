@@ -31,7 +31,8 @@ with open(argv[1]) as f:
 
       if '[Prefix]' in line:
          line = line.replace('// ', '')
-         prefix[key] = line.replace('[Prefix] ', '')
+         line = line.replace(' ', '')
+         prefix[key] = line.replace('[Prefix]', '')
          continue
 
       if '[Skip]' in line:

@@ -69,3 +69,27 @@
 * Description: ModIntのMODを実行時に指定するバージョン
 * 計算量: -
 
+# UnionFindライブラリ
+
+## UnionFindクラス
+* Prefix: uf-class
+* Description: UnionFindクラス
+* 計算量: -
+
+# グラフライブラリ(Graph.code-snippets)
+
+## グラフの読み込み
+* Prefix: g-load-directed-edge-inline, g-load-undirected-edge-inline
+* Description: 重みなしグラフの読み込み
+* 計算量: O(E)
+
+* Prefix: g-load-directed-weight-edge-inline, g-load-undirected-weight-edge-inline
+* Description: 重みありグラフの読み込み
+* 計算量: O(E)
+
+## 最短路
+### 幅優先探索
+* Prefix: g-shortest-bfs
+* Description: 幅優先探索で単一始点最短路を求める
+* 計算量: $O(N + E)$
+
