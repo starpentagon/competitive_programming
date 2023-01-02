@@ -168,6 +168,7 @@ vector<long long> ShortestPathDijkstra(const vector<vector<pair<int, long long>>
 // @retval true 負の閉路が存在, false 負の閉路が存在しない
 // @note 負の閉路が存在する場合、重みがマイナス無限大になるノードをDetectNegtiveInfNode()で特定可能
 // @note 計算量: O(E * N)
+// 非連結成分には numeric_limits<long long>::max() が設定される
 pair<bool, vector<long long>> ShortestPathBellmanFord(const vector<vector<pair<int, long long>>>& adj_list, const int start) {
    // 重みリストの初期化
    int N = (int)adj_list.size() - 1;
@@ -254,3 +255,59 @@ vector<bool> DetectNegativeInfNode(const vector<vector<pair<int, long long>>>& a
    return negative_inf_node;
 }
 // [End] Shortest path(BellmanFord)
+
+// [Start] Shortest path(WarshallFloyd)
+// [Prefix] g-shortest-warshall
+// [Verified] N<=10^2, GRL_1_C(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_1_C&lang=ja)
+// ワーシャル・フロイド法で全点対間最短路を求める
+// @note 負の重みが存在しても正しく動く
+// @param min_weight_list[i][j] : node i->jの最短路。1-indexedのためi=0, j=0にはINFが入る
+// @retval true 負の閉路が存在, false 負の閉路が存在しない
+// @note 最短路の重みが負の無限大になるノードはmin_weight_list[node][node]が負のもの
+// @note 計算量: O(N^3)
+// 非連結成分には INF = numeric_limits<long long>::max() が設定される
+pair<bool, vector<vector<long long>>> AllShortestPathWarshallFloyd(const vector<vector<pair<int, long long>>>& adj_list) {
+   // dp[k][i][j]: ノード1からkまでを使ってiからjまで移った時の最小重み
+   // -> dp[i][j]のみで管理可能
+   int L = (int)adj_list.size();
+   int N = L - 1;
+   constexpr long long INF = numeric_limits<long long>::max();
+
+   vector<vector<long long>> min_weight_list(L, vector<long long>(L, INF));
+
+   // 初期化
+   for (int node = 1; node <= N; node++) {
+      min_weight_list[node][node] = 0;
+
+      for (const auto [to, weight] : adj_list[node]) {
+         min_weight_list[node][to] = weight;
+      }
+   }
+
+   for (int node_k = 1; node_k <= N; node_k++) {
+      for (int node_i = 1; node_i <= N; node_i++) {
+         for (int node_j = 1; node_j <= N; node_j++) {
+            if (min_weight_list[node_i][node_k] == INF || min_weight_list[node_k][node_j] == INF) {
+               // 重み < 0の可能性があり直後の更新がinf > inf - dで成立し意図しない挙動になるため明示的にスキップ
+               continue;
+            }
+
+            long long weight = min_weight_list[node_i][node_k] + min_weight_list[node_k][node_j];
+
+            min_weight_list[node_i][node_j] = min(min_weight_list[node_i][node_j], weight);
+         }
+      }
+   }
+
+   bool negative_loop = false;
+
+   for (int node = 1; node <= N; node++) {
+      if (min_weight_list[node][node] < 0) {
+         negative_loop = true;
+      }
+   }
+
+   return {negative_loop, min_weight_list};
+}
+
+// [End] Shortest path(WarshallFloyd)

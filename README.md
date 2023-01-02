@@ -105,3 +105,9 @@
 * Note: 枝の重みが負の場合も適用可能
 * 計算量: O(N * E)
 
+### Warshall Floyd法
+* Prefix: g-h-warshall, g-i-warshall
+* Description: Warshall Floyd法で全点最短路を求める
+* Note: 枝の重みが負の場合も適用可能
+* 計算量: O(N^3)
+
