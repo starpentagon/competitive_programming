@@ -94,8 +94,14 @@
 * 計算量: $O(N + E)$
 
 ### ダイクストラ法
-* Prefix: g-h-dijkstra, g-i-dijkstra
+* Prefix: g-shortest-dijkstra
 * Description: ダイクストラ法で単一始点最短路を求める
 * Note: 枝の重みがすべて非負の場合に適用可能
 * 計算量: $O(E + N log N)$
+
+### Bellman-Ford法
+* Prefix: g-shortest-bellman
+* Description: Bellman-Ford法で単一始点最短路を求める
+* Note: 枝の重みが負の場合も適用可能
+* 計算量: O(N * E)
 

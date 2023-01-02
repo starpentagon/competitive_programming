@@ -124,7 +124,7 @@ vector<long long> ShortestPathBFS(const vector<vector<int>>& adj_list, const int
 // 非連結成分には numeric_limits<long long>::max() が設定される
 vector<long long> ShortestPathDijkstra(const vector<vector<pair<int, long long>>>& adj_list, const int start) {
    // 重みリストの初期化
-   int L = adj_list.size();
+   int L = (int)adj_list.size();
    constexpr long long INF = numeric_limits<long long>::max();
    vector<long long> min_weight_list(L, INF);
 
@@ -158,3 +158,99 @@ vector<long long> ShortestPathDijkstra(const vector<vector<pair<int, long long>>
    return min_weight_list;
 }
 // [End] Shortest path(Dijkstra)
+
+// [Start] Shortest path(BellmanFord)
+// [Prefix] g-shortest-bellman
+// [Verified] N<=10^3, E<=2*10^3, GRL_1_B(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_1_B&lang=ja)
+// ベルマン・フォード法で単一始点最短路を求める
+// @note 負の重みが存在しても正しく動く
+// @note 負の閉路があれば検知可能
+// @retval true 負の閉路が存在, false 負の閉路が存在しない
+// @note 負の閉路が存在する場合、重みがマイナス無限大になるノードをDetectNegtiveInfNode()で特定可能
+// @note 計算量: O(E * N)
+pair<bool, vector<long long>> ShortestPathBellmanFord(const vector<vector<pair<int, long long>>>& adj_list, const int start) {
+   // 重みリストの初期化
+   int N = (int)adj_list.size() - 1;
+   constexpr long long INF = numeric_limits<long long>::max();
+   vector<long long> min_weight_list(N + 1, INF);
+
+   min_weight_list[start] = 0;
+
+   // 辺のリスト
+   using Edge = tuple<int, int, long long>;
+   vector<Edge> edge_list;
+
+   for (int i = 1; i <= N; i++) {
+      for (auto [to, weight] : adj_list[i]) {
+         edge_list.emplace_back(i, to, weight);
+      }
+   }
+
+   bool negative_loop = false;
+
+   for (int i = 1; i <= N; i++) {
+      for (const auto [from, to, weight] : edge_list) {
+         if (min_weight_list[from] == INF) {
+            // 重み < 0の可能性があり直後の判定式inf > inf - dで成立し意図しない挙動になるため明示的にスキップ
+            continue;
+         }
+
+         if (min_weight_list[to] > min_weight_list[from] + weight) {
+            min_weight_list[to] = min_weight_list[from] + weight;
+
+            if (i == N) {
+               // 負の閉路がない場合はN-1回目のループで最短経路が求まる
+               // つまり、N回目のループで値の更新が起こるのは負の閉路がある場合
+               negative_loop = true;
+               break;
+            }
+         }
+      }
+   }
+
+   return {negative_loop, min_weight_list};
+}
+
+// 最短路の重みが負の無限大になるノードを特定する
+// @param min_weight_list : ShortestPathBellmanFord()を実行済の重みリスト
+// @param negative_inf_node[i] = true : ノードiの重みが負の無限大
+vector<bool> DetectNegativeInfNode(const vector<vector<pair<int, long long>>>& adj_list, const int start, vector<long long>& min_weight_list) {
+   // 重みリストの初期化
+   int N = (int)adj_list.size() - 1;
+   constexpr long long INF = numeric_limits<long long>::max();
+
+   // 負の無限大フラグリストの初期化
+   vector<bool> negative_inf_node(N + 1, false);
+
+   // 辺のリスト
+   using Edge = tuple<int, int, long long>;
+   vector<Edge> edge_list;
+
+   for (int i = 1; i <= N; i++) {
+      for (auto [to, weight] : adj_list[i]) {
+         edge_list.emplace_back(i, to, weight);
+      }
+   }
+
+   for (size_t i = 1; i <= N; i++) {
+      for (const auto [from, to, weight] : edge_list) {
+         if (min_weight_list[from] == INF) {
+            continue;
+         }
+
+         if (min_weight_list[to] > min_weight_list[from] + weight) {
+            // N+1回目以降で値の更新が起きているので繰り返すことで負の無限大へ
+            min_weight_list[to] = min_weight_list[from] + weight;
+            negative_inf_node[to] = true;
+         }
+
+         // 負の無限大になるノードから遷移可能
+         if (negative_inf_node[from]) {
+            negative_inf_node[to] = true;
+         }
+      }
+   }
+
+   return negative_inf_node;
+}
+// [End] Shortest path(BellmanFord)
