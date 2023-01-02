@@ -19,14 +19,14 @@ template<class T> ostream& operator<<(ostream& os, vector<T>& vec){ rep(i, vec.s
 
 using ll = long long;
 using ull = unsigned long long;
-
-// BFSで最短路を求める
+// BFSで単一始点最短路を求める
 // 計算量: O(N+E)
 // 非連結成分には numeric_limits<long long>::max() が設定される
-vector<long long> ShortestPathBFS(const int N, const vector<vector<int>>& adj_list, const int start) {
+vector<long long> ShortestPathBFS(const vector<vector<int>>& adj_list, const int start) {
    // 重みリストの初期化
    constexpr long long INF = numeric_limits<long long>::max();
-   vector<long long> min_weight_list(N + 1, INF);
+   int L = (int)adj_list.size();
+   vector<long long> min_weight_list(L, INF);
 
    min_weight_list[start] = 0;
 
@@ -49,7 +49,6 @@ vector<long long> ShortestPathBFS(const int N, const vector<vector<int>>& adj_li
 
    return min_weight_list;
 }
-
 int main() {
    int N;
    cin >> N;
@@ -72,7 +71,7 @@ int main() {
       }
    }
 
-   auto min_dist_tbl = ShortestPathBFS(N, adj_list, 1);
+   auto min_dist_tbl = ShortestPathBFS(adj_list, 1);
 
    rep(i, N) {
       auto dist = min_dist_tbl[i + 1];

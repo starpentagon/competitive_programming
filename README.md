@@ -93,3 +93,9 @@
 * Description: 幅優先探索で単一始点最短路を求める
 * 計算量: $O(N + E)$
 
+### ダイクストラ法
+* Prefix: g-h-dijkstra, g-i-dijkstra
+* Description: ダイクストラ法で単一始点最短路を求める
+* Note: 枝の重みがすべて非負の場合に適用可能
+* 計算量: $O(E + N log N)$
+

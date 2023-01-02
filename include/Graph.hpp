@@ -82,14 +82,15 @@ void UndirectedWeightEdgeLoad() {
 
 // [Start] Shortest path(BFS)
 // [Prefix] g-shortest-bfs
-// BFSで最短路を求める
+// BFSで単一始点最短路を求める
 // 計算量: O(N+E)
 // 非連結成分には numeric_limits<long long>::max() が設定される
 // [Verified] N<=10^2, ALDS1_11_C(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_11_C&lang=ja)
-vector<long long> ShortestPathBFS(const int N, const vector<vector<int>>& adj_list, const int start) {
+vector<long long> ShortestPathBFS(const vector<vector<int>>& adj_list, const int start) {
    // 重みリストの初期化
    constexpr long long INF = numeric_limits<long long>::max();
-   vector<long long> min_weight_list(N + 1, INF);
+   int L = (int)adj_list.size();
+   vector<long long> min_weight_list(L, INF);
 
    min_weight_list[start] = 0;
 
@@ -113,3 +114,47 @@ vector<long long> ShortestPathBFS(const int N, const vector<vector<int>>& adj_li
    return min_weight_list;
 }
 // [End] Shortest path(BFS)
+
+// [Start] Shortest path(Dijkstra)
+// [Prefix] g-shortest-dijkstra
+// [Verified] N<=10^5, E<=5*10^5, GRL_1_A(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_1_A&lang=ja)
+// ダイクストラ法で単一始点最短路を求める
+// @pre 各エッジの重みが非負であること
+// 計算量: O(E + N log N)
+// 非連結成分には numeric_limits<long long>::max() が設定される
+vector<long long> ShortestPathDijkstra(const vector<vector<pair<int, long long>>>& adj_list, const int start) {
+   // 重みリストの初期化
+   int L = adj_list.size();
+   constexpr long long INF = numeric_limits<long long>::max();
+   vector<long long> min_weight_list(L, INF);
+
+   // 重み最小のノードを管理
+   using WeightNode = pair<long long, int>;  // (startからの最小重み, ノード番号)
+   priority_queue<WeightNode, vector<WeightNode>, greater<WeightNode>> node_queue;
+
+   min_weight_list[start] = 0;
+   node_queue.emplace(0, start);
+
+   while (!node_queue.empty()) {
+      const auto [min_weight, min_node] = node_queue.top();
+      node_queue.pop();
+
+      // すでに更新済みの場合はskip
+      // - skipしないとO(N^2)となるケースが存在
+      // see: https://snuke.hatenablog.com/entry/2021/02/22/102734
+      if (min_weight_list[min_node] < min_weight) {
+         continue;
+      }
+
+      // 重み最小のノードに隣接するノードを更新できるかチェック
+      for (const auto& [node_to, weight] : adj_list[min_node]) {
+         if (min_weight_list[node_to] > min_weight + weight) {
+            min_weight_list[node_to] = min_weight + weight;
+            node_queue.emplace(min_weight_list[node_to], node_to);
+         }
+      }
+   }
+
+   return min_weight_list;
+}
+// [End] Shortest path(Dijkstra)
