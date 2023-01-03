@@ -311,3 +311,148 @@ pair<bool, vector<vector<long long>>> AllShortestPathWarshallFloyd(const vector<
 }
 
 // [End] Shortest path(WarshallFloyd)
+
+// [Start] Find shortest path
+// [Prefix] g-find-shortest-path-func
+// ノード間の最短経路を求める(重み付き用)
+// @param start, node: 最短経路を求めるノード
+// @param min_weight_list: startから各ノードの最短距離が格納されたテーブル
+// @retval node_path: startノードからendノードまでの最短経路順に並べたノードリスト
+// @note 計算量: O(E)
+// Unverified
+vector<int> FindShortestPath(const int start, const int end, const vector<vector<pair<int, long long>>>& adj_list, const vector<long long>& min_weight_list) {
+   int N = (int)adj_list.size() - 1;
+
+   // to -> fromの逆順隣接リストを作る
+   using Edge = pair<int, long long>;
+   vector<vector<Edge>> rev_adj_list(N + 1, vector<Edge>());
+
+   for (int from = 1; from <= N; from++) {
+      for (auto [to, weight] : adj_list[from]) {
+         rev_adj_list[to].emplace_back(from, weight);
+      }
+   }
+
+   vector<int> back_path;
+   int node = end;
+
+   back_path.push_back(node);
+
+   while (min_weight_list[node] != 0) {
+      for (auto [from, weight] : rev_adj_list[node]) {
+         if (min_weight_list[node] == min_weight_list[from] + weight) {
+            back_path.push_back(from);
+            node = from;
+            break;
+         }
+      }
+   }
+
+   reverse(back_path.begin(), back_path.end());
+   return back_path;
+}
+
+// ノード間の最短経路を求める(重みなし用)
+// @param start, node: 最短経路を求めるノード
+// @param min_weight_list: startから各ノードの最短距離が格納されたテーブル
+// @retval node_path: startノードからendノードまでの最短経路順に並べたノードリスト
+// @note 計算量: O(E)
+vector<int> FindShortestPath(const int start, const int end, const vector<vector<int>>& adj_list, const vector<long long>& min_weight_list) {
+   int N = (int)adj_list.size() - 1;
+
+   using Edge = pair<int, long long>;
+   vector<vector<Edge>> weight_adj_list(N + 1, vector<Edge>());
+
+   for (int node = 1; node <= N; node++) {
+      for (auto to : adj_list[node]) {
+         weight_adj_list[node].emplace_back(to, 1);
+      }
+   }
+
+   return FindShortestPath(start, end, weight_adj_list, min_weight_list);
+}
+// [End] Find shortest path
+
+// [Start] Topological Sort
+// [Prefix] g-topological-sort-func
+// [Verified] N<=10^4, E<=10^5, GRL_4_B(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_4_B&lang=ja)
+// 隣接リストからトポロジカルソートを行う
+// @param adj_list 隣接リスト
+// @retval sorted_list : トポロジカルソート後のノード番号リスト
+// @retval true トポロジカルソート完了, false DAGでなくトポロジカルソート不可能
+// @note 計算量: O(E + N)
+pair<bool, vector<int>> TopologicalSort(const vector<vector<int>>& adj_list) {
+   const int N = (int)adj_list.size() - 1;
+
+   using Edge = pair<int, int>;  // from, to
+   vector<Edge> edge_list;
+
+   for (int node = 1; node <= N; node++) {
+      for (auto to : adj_list[node]) {
+         edge_list.emplace_back(node, to);
+      }
+   }
+
+   vector<int> sorted_list;
+   sorted_list.reserve(N);
+
+   // ノードの入力次数
+   vector<int> in_degree(N + 1, 0);
+
+   // 隣接リスト(エッジインデックスのリスト)を作成
+   vector<vector<int>> edge_index_list(N + 1, vector<int>());
+   const int E = (int)edge_list.size();
+
+   for (int i = 0; i < E; i++) {
+      const auto [from, to] = edge_list[i];
+
+      in_degree[to]++;
+      edge_index_list[from].push_back(i);
+   }
+
+   // エッジが残っているかのフラグ
+   vector<bool> edge_exist(E, true);
+
+   // 入力次数が0のノードが始点になる
+   queue<int> node_queue;
+
+   for (int node = 1; node <= N; node++) {
+      if (in_degree[node] == 0) {
+         node_queue.push(node);
+      }
+   }
+
+   while (!node_queue.empty()) {
+      int node = node_queue.front();
+      node_queue.pop();
+
+      sorted_list.push_back(node);
+
+      for (int edge_index : edge_index_list[node]) {
+         if (!edge_exist[edge_index]) {
+            continue;
+         }
+
+         edge_exist[edge_index] = false;
+
+         const auto [from, to] = edge_list[edge_index];
+         in_degree[to]--;
+
+         if (in_degree[to] == 0) {
+            node_queue.push(to);
+         }
+      }
+   }
+
+   bool all_edge_deleted = true;
+
+   rep(i, E) {
+      if (edge_exist[i]) {
+         all_edge_deleted = false;
+         break;
+      }
+   }
+
+   return {all_edge_deleted, sorted_list};
+}
+// [End] Topological Sort

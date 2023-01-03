@@ -111,3 +111,13 @@
 * Note: 枝の重みが負の場合も適用可能
 * 計算量: O(N^3)
 
+### 最短経路の抽出
+* Prefix: g-h-node-shortest, g-i-node-shortest
+* Description: 最短距離からノード間の最短経路を算出する
+* 計算量: O(E)
+
+## トポロジカルソート
+* Prefix: g-h-topological, g-i-topological
+* Description: トポロジカルソートを求める。DAGの判定も行える。
+* 計算量: O(N + E)
+
