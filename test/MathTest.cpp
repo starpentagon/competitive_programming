@@ -181,3 +181,84 @@ TEST(MathTest, TestPrimeFactorization) {
       EXPECT_EQ(P(17, 1), list[1]);
    }
 }
+
+TEST(MathTest, TestPrimeTableIsPrime) {
+   PrimeTable prime_table;
+   prime_table.Build(1000, false);
+
+   ASSERT_TRUE(prime_table.IsPrime(2));
+   ASSERT_TRUE(prime_table.IsPrime(3));
+   ASSERT_FALSE(prime_table.IsPrime(4));
+}
+
+TEST(MathTest, TestPrimeTablePrimeFactor) {
+   PrimeTable prime_table;
+   prime_table.Build(1000, true);
+
+   using P = pair<long long, long long>;
+
+   {
+      int N = 1;
+      auto list = prime_table.PrimeFactorization(N);
+
+      ASSERT_EQ(1, list.size());
+      ASSERT_EQ(P(2, 0), list[0]);
+   }
+   {
+      int N = 10;
+      auto list = prime_table.PrimeFactorization(N);
+
+      ASSERT_EQ(2, list.size());
+      ASSERT_EQ(P(2, 1), list[0]);
+      ASSERT_EQ(P(5, 1), list[1]);
+   }
+   {
+      int N = 360;  // 360 = 2^3 * 3^2 * 5
+      auto list = prime_table.PrimeFactorization(N);
+
+      ASSERT_EQ(3, list.size());
+      ASSERT_EQ(P(2, 3), list[0]);
+      ASSERT_EQ(P(3, 2), list[1]);
+      ASSERT_EQ(P(5, 1), list[2]);
+   }
+   {
+      int N = 991;
+      auto list = prime_table.PrimeFactorization(N);
+
+      ASSERT_EQ(1, list.size());
+      ASSERT_EQ(P(991, 1), list[0]);
+   }
+}
+
+TEST(MathTest, TestPrimeTableIntervalIsPrime) {
+   PrimeTable prime_table;
+   prime_table.IntervalBuild(10000, 1000, false);  // [9001, 10000]
+
+   ASSERT_TRUE(prime_table.IsIntervalPrime(9001));
+   ASSERT_FALSE(prime_table.IsIntervalPrime(9003));
+   ASSERT_FALSE(prime_table.IsIntervalPrime(9999));
+   ASSERT_FALSE(prime_table.IsIntervalPrime(10000));
+}
+
+TEST(MathTest, TestPrimeTableIntervalFactor) {
+   using P = pair<long long, long long>;
+   PrimeTable prime_table;
+   prime_table.IntervalBuild(10000, 1000, true);  // [9001, 10000]
+
+   {
+      int N = 9001;
+      auto list = prime_table.IntervalPrimeFactorization(N);
+
+      ASSERT_EQ(1, list.size());
+      ASSERT_EQ(P(9001, 1), list[0]);
+   }
+   {
+      int N = 9999;  // 9999 = 3^2 * 11 * 101
+      auto list = prime_table.IntervalPrimeFactorization(N);
+
+      ASSERT_EQ(3, list.size());
+      ASSERT_EQ(P(3, 2), list[0]);
+      ASSERT_EQ(P(11, 1), list[1]);
+      ASSERT_EQ(P(101, 1), list[2]);
+   }
+}

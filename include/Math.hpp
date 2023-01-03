@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <cassert>
 #include <vector>
 #include <algorithm>
@@ -28,6 +29,178 @@ bool IsPrime(const long long N) {
    return true;
 }
 // [End] IsPrime
+
+// [Start] Prime enumeration and factorization(Sieve of Eratosthenes)
+// [Prefix] prime-table-class
+// [Verified] 素数列挙: N<=10^8, ALDS1_1_C(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_1_C&lang=ja)
+// [Verified] 素因数分解: N<=10^3, UnitTest
+// [Verified] 区間[N-K+1, N]の素数列挙, 素因数分解: N<=10^12, K<=10^6, ABC_227 「G - Divisors of Binomial Coefficient」(https://atcoder.jp/contests/abc227/tasks/abc227_g)
+// エラトステネスの篩でN<=10^7もしくは区間[N-K+1, N](N<=10^14, K<=10^7)の
+// - 素数列挙
+// - 素因数分解
+// を行う
+class PrimeTable {
+  public:
+   PrimeTable();
+
+   // 区間[1, N]の素数列挙を行う
+   // 計算量: O(N log log N), 素因数分解を行う場合はN log N程度
+   // 空間量: O(N)
+   void Build(long long N, const bool factorization = false);
+
+   // 素数判定
+   // 計算量: O(1)
+   bool IsPrime(long long N) const {
+      assert(0 <= N && N <= N_);
+      return prime_table_[N];
+   }
+
+   // 素因数分解
+   // 計算量: O(1)
+   vector<pair<long long, long long>> PrimeFactorization(long long N) const {
+      assert(1 <= N && N <= N_);
+      return prime_factor_[N];
+   }
+
+   // 区間[N-K+1, N]の素数列挙を行う
+   // 計算量: O(K log log K + sqrt{N} log N), 素因数分解を行う場合はK log K程度
+   // 空間量: O(K)
+   void IntervalBuild(long long N, long long K, const bool factorization = false);
+
+   // 区間[N-K+1, N]の素数判定
+   // 計算量: O(1)
+   bool IsIntervalPrime(long long N) const {
+      long long A = interval_N_ - interval_K_ + 1;
+      assert(A <= N && N <= interval_N_);
+      return interval_prime_table_[N - A];
+   }
+
+   // 区間[N-K+1, N]の素因数分解
+   // 計算量: O(1)
+   vector<pair<long long, long long>> IntervalPrimeFactorization(long long N) const {
+      long long A = interval_N_ - interval_K_ + 1;
+      assert(A && N <= interval_N_);
+      return interval_prime_factor_[N - A];
+   }
+
+  private:
+   long long N_;  // 素数列挙の上限
+
+   long long interval_N_;  // 素数の区間列挙の上限
+   long long interval_K_;  // 素数の区間列挙の幅
+
+   vector<bool> prime_table_;           // 素数フラグ
+   vector<bool> interval_prime_table_;  // 区間[N-K+1, N]での素数フラグ
+
+   vector<vector<pair<long long, long long>>> prime_factor_;           // prime_factor_[n]: nの素因数(p, e)リスト
+   vector<vector<pair<long long, long long>>> interval_prime_factor_;  // interval_prime_factor_[n]: nの素因数(p, e)リスト
+};
+
+PrimeTable::PrimeTable()
+    : N_(0), interval_N_(0), interval_K_(0) {
+}
+
+void PrimeTable::Build(long long N, const bool factorization) {
+   N_ = N;
+   prime_table_.clear();
+   prime_table_.resize(N + 1, true);
+
+   if (factorization) {
+      prime_factor_.clear();
+      prime_factor_.resize(N + 1);
+
+      prime_factor_[1].emplace_back(2, 0);  // 1は2^0とする
+   }
+
+   prime_table_[0] = prime_table_[1] = false;
+
+   auto calc_exponent = [](long long p, long long n) {
+      long long cnt = 0;
+
+      while (n >= p && (n % p) == 0) {
+         cnt++;
+         n /= p;
+      }
+
+      return cnt;
+   };
+
+   for (long long p = 2; p <= N; p++) {
+      if (!prime_table_[p]) continue;
+
+      // pは素数 -> pの倍数を合成数として記録する
+      for (long long k = 2 * p; k <= N; k += p) {
+         prime_table_[k] = false;
+
+         if (factorization) {
+            auto e = calc_exponent(p, k);
+            prime_factor_[k].emplace_back(p, e);
+         }
+      }
+
+      if (factorization) {
+         prime_factor_[p].emplace_back(p, 1);
+      }
+   }
+}
+
+void PrimeTable::IntervalBuild(long long N, long long K, const bool factorization) {
+   interval_N_ = N;
+   interval_K_ = K;
+
+   interval_prime_table_.clear();
+   interval_prime_table_.resize(K, true);
+
+   vector<long long> interval_prime_rest;
+   long long A = N - K + 1;
+
+   if (factorization) {
+      interval_prime_factor_.clear();
+      interval_prime_factor_.resize(K);
+
+      interval_prime_rest.resize(K);
+      for (int i = 0; i < K; i++) {
+         interval_prime_rest[i] = A + i;
+      }
+   }
+
+   long long M = (long long)sqrt(N) + 10;
+   Build(M, false);
+
+   for (long long p = 2; p * p <= N; p++) {
+      if (!prime_table_[p]) continue;
+
+      long long start = (A + p - 1) / p * p;
+      if (start == p) start = 2 * p;
+
+      for (long long k = start; k <= N; k += p) {
+         interval_prime_table_[k - A] = false;
+
+         if (factorization) {
+            long long cnt = 0;
+
+            while (interval_prime_rest[k - A] % p == 0) {
+               interval_prime_rest[k - A] /= p;
+               cnt++;
+            }
+
+            interval_prime_factor_[k - A].emplace_back(p, cnt);
+         }
+      }
+   }
+
+   if (factorization) {
+      for (int k = 0; k < K; k++) {
+         auto p = interval_prime_rest[k];
+
+         if (p != 1) {
+            interval_prime_factor_[k].emplace_back(p, 1);
+         }
+      }
+   }
+}
+
+// [End] Prime enumeration and factorization(Sieve of Eratosthenes)
 
 // [Start] Prime factorization of a specific N
 // [Prefix] prime-factorization-func

@@ -2,6 +2,11 @@
 
 # 数学系(Math)
 
+## 素数列挙, 素因数分解, 区間篩
+* Prefix: prime-table-class
+* Description: エラトステネスの篩, 区間篩でN以下の素数列挙, 素因数分解を行う
+* 計算量: $O(N \log(\log N))$
+
 ## 素数判定
 
 * Prefix: is-prime-func
