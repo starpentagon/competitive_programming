@@ -126,3 +126,48 @@
 * Description: トポロジカルソートを求める。DAGの判定も行える。
 * 計算量: O(N + E)
 
+## 閉路検出(無向グラフ)
+* Prefix: g-h-loop-undirected, g-i-loop-undirected
+* Description: 連結成分ごとに閉路を検出し、存在すればその隣接関係を返す
+* 計算量: O(N + E)
+
+## 閉路検出(有向グラフ)
+* Prefix: g-h-loop-directed, g-i-loop-directed
+* Description: 連結成分ごとに閉路を検出し、存在すればその隣接関係を返す
+* 計算量: O(N + E)
+
+
+# Grid操作
+
+## Gridのロード
+* Prefix: grid-load-inline
+* Description: グリッドを読み込む
+* 計算量: O(HW)
+
+## Gridの方向定義
+* Prefix: grid-direction-inline
+* Description: 方向定義を読み込む
+* 計算量: O(1)
+
+## グリッド内判定
+* Prefix: grid-in-check-lambda
+* Description: グリッド内判定
+* 計算量: O(1)
+
+# 行列ライブラリ(Matrix.code-snippets)
+## 行列クラス
+* Prefix: mat-class
+* Description: 行列を扱うクラス
+* 計算量: -
+
+# Sparse Table
+## Sparse Tableクラス
+* Prefix: sp-table-class
+* Description: SparseTableを構築する
+* 計算量/空間量: 前計算 O(N log N), クエリ: O(1)
+
+## min/max演算子
+* Prefix: sp-table-min-oper-inline, sp-table-max-oper-inline
+* Description: 最小, 最大演算子の定義
+* 計算量: -
+
