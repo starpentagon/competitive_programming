@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../include/ModInt.hpp"
+#include "../../include/ModInt.hpp"
 
 TEST(ModIntStatic, TestAdd) {
    ModIntStatic<11> val(1);

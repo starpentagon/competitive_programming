@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../include/UnionFind.hpp"
+#include "../../include/UnionFind.hpp"
 
 TEST(UnionTest, TestSame) {
    UnionFind uf(10);

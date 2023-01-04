@@ -2,7 +2,11 @@
 
 #include <vector>
 #include <queue>
+#include <stack>
+#include <unordered_map>
 #include <iostream>
+
+#include "UnionFind.hpp"
 
 using namespace std;
 
@@ -446,7 +450,7 @@ pair<bool, vector<int>> TopologicalSort(const vector<vector<int>>& adj_list) {
 
    bool all_edge_deleted = true;
 
-   rep(i, E) {
+   for (int i = 0; i < E; i++) {
       if (edge_exist[i]) {
          all_edge_deleted = false;
          break;
@@ -456,3 +460,148 @@ pair<bool, vector<int>> TopologicalSort(const vector<vector<int>>& adj_list) {
    return {all_edge_deleted, sorted_list};
 }
 // [End] Topological Sort
+
+// [Start] Loop detection(Undirected)
+// [Prefix] g-loop-undirected-detection
+// [Verified] N<=10, Unit test(単一連結成分でloopあり/なし, 複数連結成分でloopありなし混在)
+// [Verified] N, E<=5*10^5, 「Cycle Detection (Undirected)」(https://judge.yosupo.jp/problem/cycle_detection_undirected)
+// 無向グラフで閉路を求める
+// @retval 閉路のリスト。閉路は(start_node, edge index list)のpairで表現
+// @note 連結成分ごとに閉路があればそのうち1つを返す
+// @note 自己ループ、多重辺があっても可能
+// 計算量: ほぼO(N + E)
+// 依存ライブラリ: UnionFind, Shortest path(BFS), Find shortest path
+vector<pair<int, vector<int>>> FindLoopUndirected(int N, const vector<pair<int, int>>& edge_list) {
+   UnionFind uf(N);
+
+   vector<bool> root_loop(N + 1, false);
+   vector<vector<int>> adj_list(N + 1);
+   int M = edge_list.size();
+   vector<unordered_map<int, int>> node_edge_map(N + 1);  // node_edge_map[i][j] -> edge(i, j)のindex
+   vector<pair<int, vector<int>>> loop_group;
+
+   auto Unite = [&](int edge_index) {
+      auto [u, v] = edge_list[edge_index];
+
+      uf.Unite(u, v);
+
+      adj_list[u].emplace_back(v);
+      adj_list[v].emplace_back(u);
+
+      node_edge_map[u][v] = edge_index;
+      node_edge_map[v][u] = edge_index;
+   };
+
+   for (int i = 0; i < M; i++) {
+      auto [u, v] = edge_list[i];
+
+      auto root_u = uf.root(u);
+      auto root_v = uf.root(v);
+
+      if (root_loop[root_u] || root_loop[root_v]) {
+         // すでにloopを抽出済
+         Unite(i);
+         root_loop[root_u] = root_loop[root_v] = true;
+         continue;
+      }
+
+      if (uf.IsSameGroup(u, v)) {
+         // u -> vのpathを求める
+         auto min_dist_tbl = ShortestPathBFS(adj_list, u);
+         auto loop_node_list = FindShortestPath(u, v, adj_list, min_dist_tbl);
+         vector<int> loop_edge_index_list;
+
+         for (int l = 1; l < (int)loop_node_list.size(); l++) {
+            auto from = loop_node_list[l - 1];
+            auto to = loop_node_list[l];
+
+            auto e = node_edge_map[from][to];
+            loop_edge_index_list.emplace_back(e);
+         }
+
+         // u-vをつないで閉路を作る
+         loop_edge_index_list.emplace_back(i);
+         root_loop[root_u] = root_loop[root_v] = true;
+
+         loop_group.emplace_back(u, loop_edge_index_list);
+      }
+
+      Unite(i);
+   }
+
+   return loop_group;
+}
+// [End] Loop detection(Undirected)
+
+// [Start] Loop detection(Directed)
+// [Prefix] g-loop-directed-detection
+// [Verified] N, E<=5*10^5, 「Cycle Detection (Directed)」(https://judge.yosupo.jp/problem/cycle_detection)
+// 有向グラフで閉路を求める
+// @retval 閉路のリスト。閉路はmap[node]: to_nodeのマップで表現
+// @note 連結成分ごとに閉路があればそのうち1つを返す
+// @note 自己ループがあっても可能
+// @retval 閉路のリスト。閉路はedge index listのlistで表現
+vector<vector<int>> FindLoopDirected(int N, const vector<pair<int, int>>& edge_list) {
+   using EdgeInfo = pair<int, int>;  // to, edge index
+   vector<vector<EdgeInfo>> adj_list(N + 1);
+   int M = edge_list.size();
+
+   for (int i = 0; i < M; i++) {
+      auto [u, v] = edge_list[i];
+
+      adj_list[u].emplace_back(v, i);
+   }
+
+   vector<bool> visited(N + 1, false);   // 1-indexed
+   vector<bool> finished(N + 1, false);  // 1-indexed
+
+   // @retval -1: loopはない, 0: loop復元済: 1以上: ループ復元中でループの開始ノード番号
+   auto dfs = [&](auto dfs, int node, vector<int>& loop_edge_index_list) -> int {
+      int ret = -1;
+      visited[node] = true;
+
+      for (auto [n_node, edge_index] : adj_list[node]) {
+         if (finished[n_node]) continue;
+
+         if (visited[n_node] && !finished[n_node]) {
+            // n_nodeを開始ノードとするloopが存在する
+            loop_edge_index_list.emplace_back(edge_index);
+            ret = n_node;
+
+            if (n_node == node) ret = 0;
+            break;
+         }
+
+         ret = dfs(dfs, n_node, loop_edge_index_list);
+
+         if (ret != -1) {
+            if (ret >= 1) {
+               loop_edge_index_list.emplace_back(edge_index);
+            }
+
+            if (ret == node) {
+               ret = 0;
+            }
+            break;
+         }
+      }
+
+      finished[node] = true;
+      return ret;
+   };
+
+   vector<vector<int>> loop_group;
+
+   for (int node = 1; node <= N; node++) {
+      vector<int> loop_edge_index_list;
+      auto loop_node = dfs(dfs, node, loop_edge_index_list);
+
+      if (loop_node != -1) {
+         reverse(loop_edge_index_list.begin(), loop_edge_index_list.end());
+         loop_group.emplace_back(loop_edge_index_list);
+      }
+   }
+
+   return loop_group;
+}
+// [End] Loop detection(Directed)
