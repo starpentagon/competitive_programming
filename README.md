@@ -111,28 +111,28 @@
 * 計算量: O(N * E)
 
 ### Warshall Floyd法
-* Prefix: g-h-warshall, g-i-warshall
+* Prefix: g-shortest-warshall
 * Description: Warshall Floyd法で全点最短路を求める
 * Note: 枝の重みが負の場合も適用可能
 * 計算量: O(N^3)
 
 ### 最短経路の抽出
-* Prefix: g-h-node-shortest, g-i-node-shortest
+* Prefix: g-find-shortest-path-func
 * Description: 最短距離からノード間の最短経路を算出する
 * 計算量: O(E)
 
 ## トポロジカルソート
-* Prefix: g-h-topological, g-i-topological
+* Prefix: g-topological-sort-func
 * Description: トポロジカルソートを求める。DAGの判定も行える。
 * 計算量: O(N + E)
 
 ## 閉路検出(無向グラフ)
-* Prefix: g-h-loop-undirected, g-i-loop-undirected
+* Prefix: g-loop-undirected-detection
 * Description: 連結成分ごとに閉路を検出し、存在すればその隣接関係を返す
 * 計算量: O(N + E)
 
 ## 閉路検出(有向グラフ)
-* Prefix: g-h-loop-directed, g-i-loop-directed
+* Prefix: g-loop-directed-detection
 * Description: 連結成分ごとに閉路を検出し、存在すればその隣接関係を返す
 * 計算量: O(N + E)
 

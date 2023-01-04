@@ -536,6 +536,7 @@ vector<pair<int, vector<int>>> FindLoopUndirected(int N, const vector<pair<int, 
 // [Start] Loop detection(Directed)
 // [Prefix] g-loop-directed-detection
 // [Verified] N, E<=5*10^5, 「Cycle Detection (Directed)」(https://judge.yosupo.jp/problem/cycle_detection)
+// ToDo: 「E - Takahashi's Anguish」(https://atcoder.jp/contests/abc256/tasks/abc256_e)でのverify
 // 有向グラフで閉路を求める
 // @retval 閉路のリスト。閉路はmap[node]: to_nodeのマップで表現
 // @note 連結成分ごとに閉路があればそのうち1つを返す
