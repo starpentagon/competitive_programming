@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <vector>
 #include <queue>
 #include <stack>
@@ -459,6 +460,20 @@ pair<bool, vector<int>> TopologicalSort(const vector<vector<int>>& adj_list) {
 
    return {all_edge_deleted, sorted_list};
 }
+
+// 重み付き版
+pair<bool, vector<int>> TopologicalSort(const vector<vector<pair<int, long long>>>& adj_weight_list) {
+   int N = adj_weight_list.size() - 1;
+   vector<vector<int>> adj_list(N + 1);
+
+   for (int u = 1; u <= N; u++) {
+      for (auto [v, w] : adj_weight_list[u]) {
+         adj_list[u].emplace_back(v);
+      }
+   }
+
+   return TopologicalSort(adj_list);
+}
 // [End] Topological Sort
 
 // [Start] Loop detection(Undirected)
@@ -606,3 +621,49 @@ vector<vector<int>> FindLoopDirected(int N, const vector<pair<int, int>>& edge_l
    return loop_group;
 }
 // [End] Loop detection(Directed)
+
+// [Start] Longest path
+// [Prefix] g-longest-path-func
+// [Verified] N, E<=10^5, EDPC「G - Longest Path」(https://atcoder.jp/contests/dp/tasks/dp_g)
+// DAGにおける最長路を求める
+// @param adj_list 重み付き隣接リスト
+// @retval -1 : DAGでなく最長路を求められない, 0以上 : 最長路の長さ
+// @note 計算量 : O(E + N)
+// 依存ライブラリ: Topological Sort
+long long LongestPath(const vector<vector<pair<int, long long>>>& adj_weight_list) {
+   const int N = adj_weight_list.size() - 1;
+   vector<long long> longest_path_weight(N + 1, 0);
+
+   // トポロジカルソート順に見ると自ノードへの到達は今後ないので最長距離を確定できる
+   auto [is_dag, sorted_nodes] = TopologicalSort(adj_weight_list);
+
+   if (!is_dag) {
+      return -1;
+   }
+
+   for (auto from : sorted_nodes) {
+      for (auto& [to, weight] : adj_weight_list[from]) {
+         if (longest_path_weight[to] < longest_path_weight[from] + weight) {
+            longest_path_weight[to] = longest_path_weight[from] + weight;
+         }
+      }
+   }
+
+   auto longest_path = *max_element(longest_path_weight.begin(), longest_path_weight.end());
+   return longest_path;
+}
+
+// 重みなし版
+long long LongestPath(const vector<vector<int>>& adj_list) {
+   int N = adj_list.size() - 1;
+   vector<vector<pair<int, long long>>> adj_weight_list(N + 1);
+
+   for (int u = 1; u <= N; u++) {
+      for (auto v : adj_list[u]) {
+         adj_weight_list[u].emplace_back(v, 1);
+      }
+   }
+
+   return LongestPath(adj_weight_list);
+}
+// [End] Longest path

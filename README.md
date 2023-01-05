@@ -136,6 +136,10 @@
 * Description: 連結成分ごとに閉路を検出し、存在すればその隣接関係を返す
 * 計算量: O(N + E)
 
+## 最長路
+* Prefix: g-longest-path-func
+* Description: DAGにおける最長路を求める
+* 計算量: O(N + E)
 
 # Grid操作
 
@@ -194,6 +198,6 @@
 
 ## LazySegmentTree用の更新演算子
 * Prefix: laz-seg-range-add/update-inline
-* Description: セグメント木上の区間加算/区間更新
+* Description: 遅延評価セグメント木上の区間加算/区間更新
 * 計算量: -
 
