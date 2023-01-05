@@ -182,3 +182,18 @@
 * Description: セグメント木上の演算子定義
 * 計算量: -
 
+## LazySegmentTree
+* Prefix: laz-seg-tree-class
+* Description: 遅延評価セグメント木の構築、区間更新、最大／最小／XOR等のRange query
+* 計算量: 構築 O(N), 区間更新 O(log N), Range Query O(log N)
+
+## SegmentTree用の演算子
+* Prefix: laz-seg-oper-min/max/sum/xor-inline
+* Description: 遅延評価セグメント木上の演算子定義
+* 計算量: -
+
+## LazySegmentTree用の更新演算子
+* Prefix: laz-seg-range-add/update-inline
+* Description: セグメント木上の区間加算/区間更新
+* 計算量: -
+

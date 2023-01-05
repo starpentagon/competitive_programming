@@ -8,7 +8,7 @@ using namespace std;
 
 // [Start] Segment Tree
 // [Prefix] seg-tree-class
-// [Verified] Range Sum: N<=5*10^5, Point Add Range Sum
+// [Verified] Range Sum: N<=5*10^5, Point Add Range Sum(https://judge.yosupo.jp/problem/point_add_range_sum)
 // [Verified] Range Min: N, Q<=10^5, Range Minimum Query(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DSL_2_A&lang=ja)
 // セグメント木
 // 計算量
@@ -137,6 +137,7 @@ X SegmentTree<X>::sub_query(size_t a, size_t b, size_t k, size_t l, size_t r) co
 // [End] Segment Tree
 
 void SegOperMin() {
+   vector<long long> init_array;
    // [Start] Segment Tree(Min)
    // [Prefix] seg-oper-min-inline
    // - 最小値
@@ -144,10 +145,14 @@ void SegOperMin() {
 
    auto oper = [](X x, X y) -> X { return min(x, y); };
    const X unit_x = numeric_limits<X>::max();  // Xの単位元
+
+   SegmentTree<X> seg_tree(init_array, oper, unit_x);
    // [End] Segment Tree(Min)
 }
 
 void SegOperMax() {
+   vector<long long> init_array;
+
    // [Start] Segment Tree(Max)
    // [Prefix] seg-oper-max-inline
    // 最大値
@@ -155,10 +160,14 @@ void SegOperMax() {
 
    auto oper = [](X x, X y) -> X { return max(x, y); };
    const X unit_x = numeric_limits<X>::min();  // Xの単位元
+
+   SegmentTree<X> seg_tree(init_array, oper, unit_x);
    // [End] Segment Tree(Max)
 }
 
 void SegOperSum() {
+   vector<long long> init_array;
+
    // [Start] Segment Tree(Sum)
    // [Prefix] seg-oper-sum-inline
    // 合計
@@ -166,10 +175,14 @@ void SegOperSum() {
 
    auto oper = [](X x, X y) -> X { return x + y; };
    const X unit_x = 0;  // Xの単位元
+
+   SegmentTree<X> seg_tree(init_array, oper, unit_x);
    // [End] Segment Tree(Sum)
 }
 
 void SegOperXOR() {
+   vector<long long> init_array;
+
    // [Start] Segment Tree(XOR)
    // [Prefix] seg-oper-xor-inline
    // XOR
@@ -177,5 +190,7 @@ void SegOperXOR() {
 
    auto oper = [](X x, X y) -> X { return x ^ y; };
    const X unit_x = 0;  // Xの単位元
+
+   SegmentTree<X> seg_tree(init_array, oper, unit_x);
    // [End] Segment Tree(XOR)
 }
