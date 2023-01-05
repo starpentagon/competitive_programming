@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cassert>
 #include <vector>
 #include <queue>
 #include <stack>
@@ -667,3 +668,55 @@ long long LongestPath(const vector<vector<int>>& adj_list) {
    return LongestPath(adj_weight_list);
 }
 // [End] Longest path
+
+// [Start] Move on loop
+// [Prefix] g-move-on-loop-func
+// [Verified] N,Q <= 10^5: ABC_258「E - Packing Potatoes」(https://atcoder.jp/contests/abc258/tasks/abc258_e)
+// 指定回数移動後にどのノードにいるかを返す
+// @note 事前計算: O(N), startからMoveCount回の移動計算: O(1)
+// @pre ノードstartが所属する連結成分はFunctional Graphであること
+// @retval [out_loop, in_loop] : startを起点にloopに入るまでの移動履歴、loopに入った後の移動履歴
+pair<vector<int>, vector<int>> MoveOnLoopPrep(const int start, const vector<vector<int>>& adj_list, const vector<pair<int, int>>& edge_list, const vector<int>& loop_edge_index_list) {
+   int N = adj_list.size() - 1;
+   vector<bool> loop_node(N + 1, false);
+
+   for (auto e : loop_edge_index_list) {
+      auto [from, to] = edge_list[e];
+      loop_node[from] = true;
+   }
+
+   int node = start;
+   auto loop_size = loop_edge_index_list.size();
+
+   vector<int> out_loop_node, in_loop_node;
+
+   while (true) {
+      if (loop_node[node]) {
+         if (in_loop_node.size() == loop_size) {
+            break;
+         }
+
+         in_loop_node.emplace_back(node);
+      } else {
+         out_loop_node.emplace_back(node);
+      }
+
+      assert(adj_list[node].size() == 1);
+      node = adj_list[node][0];
+   }
+
+   return {out_loop_node, in_loop_node};
+}
+
+// 指定回数を移動した後のノード番号を返す
+int MoveOnLoop(const vector<int>& out_loop_node, const vector<int>& in_loop_node, long long move_count) {
+   if (move_count < (long long)out_loop_node.size()) {
+      return out_loop_node[move_count];
+   }
+
+   move_count -= out_loop_node.size();
+   move_count %= in_loop_node.size();
+
+   return in_loop_node[move_count];
+}
+// [End] Move on loop

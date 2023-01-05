@@ -141,6 +141,11 @@
 * Description: DAGにおける最長路を求める
 * 計算量: O(N + E)
 
+## 閉路上での移動
+* Prefix: g-move-on-loop-func
+* Description: 指定回数移動後にどのノードにいるかを返す。
+* 計算量: 事前計算: O(N), startからMoveCount回の移動計算: O(1)
+
 # Grid操作
 
 ## Gridのロード
