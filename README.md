@@ -206,3 +206,12 @@
 * Description: 遅延評価セグメント木上の区間加算/区間更新
 * 計算量: -
 
+# 累積和
+* Prefix: cum-sum-class
+* Description: 累積和を管理するクラス
+* 計算量: 前処理O(N), 区間和 O(1)
+
+# 累積和(2次元配列)
+* Prefix: cum-sum-2d-class
+* Description: 二次元配列上の累積和/矩形和を管理するクラス
+* 計算量: 前処理O(HW), 縦横斜めの区間和 O(1)
