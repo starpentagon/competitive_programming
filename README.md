@@ -215,3 +215,14 @@
 * Prefix: cum-sum-2d-class
 * Description: 二次元配列上の累積和/矩形和を管理するクラス
 * 計算量: 前処理O(HW), 縦横斜めの区間和 O(1)
+
+# いもす法(1次元)
+* Prefix: imos-1d-class
+* Description: 1次元のいもす法
+* 計算量: O(N)
+
+# いもす法(2次元)
+* Prefix: imos-2d-class
+* Description: 2次元のいもす法
+* 計算量: O(HW)
+
