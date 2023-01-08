@@ -35,47 +35,57 @@ void DPFramework() {
 // [Start] LIS: Longest Increasing subsequence
 // [Prefix] dp-lis-func
 // [Verified] N<=10^5: Longest Increasing Subsequence(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DPL_1_D&lang=ja)
-// 最長増加部分列を求める
-// @param sequence: 数列
-// @param max_len : max_lenが得られた時の部分列をsubsequenceに設定する
-// @retval 最長増加部分列の長さ
-// @note 計算量: O(N log N)
+// [Verified] N<=5*10^5: Longest Increasing Subsequence(https://judge.yosupo.jp/problem/longest_increasing_subsequence)
+// 最長増加部分列(LIS)を求める
+// @param vals: LISを求める数列
+// @retval LIS
 template <class T = long long>
-size_t LIS(const vector<T>& sequence, const size_t max_len = -1, vector<T>* subsequence = nullptr) {
-   size_t N = sequence.size();
+vector<T> LIS(const vector<T>& vals) {
+   size_t N = vals.size();
 
    // i回目の反復 = 要素0からi-1まで使う
-   size_t len = 1;       // 最長増加部分列の長さ
-   vector<T> dp(N + 1);  // dp[l]: 長さlの増加部分列の最後の要素の最小値
+   size_t len = 1;          // 最長増加部分列の長さ
+   using P = pair<T, int>;  // (val, index)
 
-   dp[1] = sequence[0];
+   vector<P> dp(N + 1, P(0, -1));  // dp[l]: 長さlの増加部分列の最後の要素の最小値
+   vector<int> pre_pos(N, -1);     // 復元用テーブル: dp[l]を更新した際のdp[l-1]の最小要素の位置を持つ
+
+   dp[len] = P(vals[0], 0);
 
    for (size_t i = 1; i < N; i++) {
-      const auto v = sequence[i];
+      const auto v = vals[i];
 
-      if (dp[len] < v) {
+      if (dp[len].first < v) {
          // vを加えて増加列を延ばせる場合
          len += 1;
-         dp[len] = v;
-
-         if (max_len == len) {
-            subsequence->clear();
-
-            for (size_t j = 1; j <= len; j++) {
-               subsequence->push_back(dp[j]);
-            }
-         }
+         dp[len] = P(v, i);
+         pre_pos[i] = dp[len - 1].second;
       } else {
-         // dp[1],...,dp[l](昇順になっている)の中でvを最初に超える要素をvで更新
-         // vと同じ値がある場合は何もしない(実装上は同じ値で上書きされる)
+         // dp[len] >= v
+         // dp[1],...,dp[len](昇順になっている)の中でvを最初に超える要素をvで更新
          auto l = dp.begin() + 1;    // 長さ1
          auto r = dp.begin() + len;  // 長さlen
-         auto it = lower_bound(l, r, v);
+         auto it = lower_bound(l, r, P(v, -1));
 
-         *it = v;
+         int update = it - l + 1;
+         dp[update] = P(v, i);
+         pre_pos[i] = dp[update - 1].second;
       }
    }
 
-   return len;
+   vector<T> lis;
+   lis.reserve(len);
+
+   int i = dp[len].second;
+
+   while (true) {
+      lis.emplace_back(vals[i]);
+
+      i = pre_pos[i];
+      if (i == -1) break;
+   }
+
+   reverse(lis.begin(), lis.end());
+   return lis;
 }
 // [End] LIS: Longest Increasing subsequence

@@ -89,8 +89,29 @@ int main() {
    vector<int> al(N);
    cin >> al;
 
-   auto ans = LIS(al);
-   cout << ans.size() << endl;
+   auto lis = LIS(al);
+
+   cout << lis.size() << endl;
+
+   auto find_index = [&](int v, int start) {
+      for (int i = start; i < N; i++) {
+         if (al[i] == v) {
+            return i;
+         }
+      }
+      return -1;
+   };
+
+   int i = 0;
+   vector<int> ans;
+
+   for (auto v : lis) {
+      i = find_index(v, i);
+      assert(i != -1);
+      ans.emplace_back(i);
+   }
+
+   cout << ans << endl;
 
    return 0;
 }
