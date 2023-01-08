@@ -262,3 +262,10 @@
 * Prefix: find-max-less-vec, find-max-less-set
 * Description: valより小さい最大の要素を返す
 * 計算量: O(log N)
+
+# その他ライブラリ(Misc.code-snippets)
+## 座標圧縮
+* Prefix: pos-comp
+* Description: 座標圧縮を行う
+* 計算量: O(N log N)
+
