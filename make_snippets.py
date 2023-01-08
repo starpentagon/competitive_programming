@@ -16,6 +16,7 @@ with open(argv[1]) as f:
 
    for line in lines:
       line = line.replace('\n', '')
+      line = line.replace('__DUMMY__', '')
       
       if '[Start]' in line:
          line = line.replace('[Start]', '')

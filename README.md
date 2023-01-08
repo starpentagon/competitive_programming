@@ -226,3 +226,39 @@
 * Description: 2次元のいもす法
 * 計算量: O(HW)
 
+# 探索ライブラリ(Search.code-snippets)
+
+## 二分探索(整数)
+* Prefix: bin-search-int
+* Description: 条件を満たす境界(最大/最小)を二分探索で求める。
+* 計算量: O(log(|kTrivialOK - kTrivialNG|))
+
+## 二分探索(浮動小数点)
+* Prefix: bin-search-dbl
+* Description: 条件を満たす境界(最大/最小)を二分探索で求める。
+* 計算量: O(log(|kTrivialOK - kTrivialNG|))
+
+## しゃくとり法
+* Prefix: shakutori
+* Description: しゃくとり法のベースコード
+* 計算量: O(N)
+
+## 指定した値以上で最小の要素の探索
+* Prefix: find-min-greater-eq-vec, find-min-greater-eq-set
+* Description: val以上で最小の要素を返す
+* 計算量: O(log N)
+
+## 指定した値より大きい最小の要素の探索
+* Prefix: find-min-greater-vec, find-min-greater-set
+* Description: valより大きい最小の要素を返す
+* 計算量: O(log N)
+
+## 指定した値以下で最大の要素の探索
+* Prefix: find-max-less-eq-vec, find-max-less-eq-set
+* Description: val以下で最大の要素を返す
+* 計算量: O(log N)
+
+## 指定した値より小さい最大の要素の探索
+* Prefix: find-max-less-vec, find-max-less-set
+* Description: valより小さい最大の要素を返す
+* 計算量: O(log N)
