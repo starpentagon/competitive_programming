@@ -1,18 +1,36 @@
-#pragma once
-
-#include <cassert>
+#include <cmath>
+#include <iostream>
 #include <vector>
+#include <algorithm>
+#include <cassert>
+#include <functional>
+#include <limits>
 #include <map>
 
 using namespace std;
 
-// [Start] UnionFind
-// [Prefix] union-find-class
+#ifdef LOCAL
+#include <bits/stdc++.h>
+#define debug(...) debug_print::multi_print(#__VA_ARGS__, __VA_ARGS__)
+#else
+#define debug(...) ;
+#endif
+
+// clang-format off
+#define rep(i, n) for (int i = 0; (i) < (int)(n); (i)++)
+ 
+template<class T> bool chmax(T &a, const T &b) {if(a<b) {a=b; return true;} return false; }
+template<class T> bool chmin(T &a, const T &b) {if(a>b) {a=b; return true;} return false; }
+ 
+template<class T> istream& operator>>(istream& is, vector<T>& vec){ rep(i, vec.size()) is >> vec[i]; return is;}
+template<class T> ostream& operator<<(ostream& os, vector<T>& vec){ rep(i, vec.size()) os << vec[i] << (i+1==(int)vec.size() ? "" : " "); return os;}
+// clang-format on
+
+using ll = long long;
+using ull = unsigned long long;
+
 // UnionFindで素集合を管理するクラス
 // ノードIDは1-indexed
-// [Skip] @ref https://www.slideshare.net/chokudai/union-find-49066733/1
-// [Verified] n<=10^4, query<=10^5, DSL_1_A(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DSL_1_A&lang=ja)
-// [Verified] N,Q<=2*10^5, Unionfind(https://judge.yosupo.jp/problem/unionfind)
 class UnionFind {
   public:
    UnionFind(const size_t N);
@@ -118,4 +136,29 @@ map<size_t, vector<size_t>> UnionFind::EnumGroup() const {
 
    return group;
 }
-// [End] UnionFind
+
+int main() {
+   int N, Q;
+   cin >> N >> Q;
+
+   UnionFind uf(N);
+
+   rep(q, Q) {
+      int t, u, v;
+      cin >> t >> u >> v;
+
+      u++;
+      v++;
+
+      if (t == 0) {
+         uf.Unite(u, v);
+      } else {
+         if (uf.IsSameGroup(u, v)) {
+            cout << 1 << endl;
+         } else {
+            cout << 0 << endl;
+         }
+      }
+   }
+   return 0;
+}
