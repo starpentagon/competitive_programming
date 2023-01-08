@@ -289,3 +289,15 @@
 * Prefix: p-(ans/yes/no/neg)-inline
 * Description: 回答出力
 * 計算量: -
+
+# 動的計画法
+
+## 動的計画法のフレームワーク
+* Prefix: dp-framework-inline
+* Description: 動的計画法の実装FW
+* 計算量: -
+
+## 最長増加部分列
+* Prefix: dp-lis-func
+* Description: 最長増加部分列を求める
+* 計算量: O(N log N)
