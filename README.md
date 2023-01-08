@@ -275,3 +275,17 @@
 * Description: 座標圧縮を行う
 * 計算量: O(N log N)
 
+## std::pairのHash関数
+* Prefix: hash-pair-struct
+* Description: std::pair型のハッシュ関数
+* 計算量: -
+
+## 小数点出力の設定
+* Prefix: cout-float-inline
+* Description: 小数点以下15桁まで出力
+* 計算量: -
+
+## 出力
+* Prefix: p-(ans/yes/no/neg)-inline
+* Description: 回答出力
+* 計算量: -
