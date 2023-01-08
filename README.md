@@ -244,7 +244,7 @@
 * 計算量: O(N)
 
 ## 指定した値以上で最小の要素の探索
-* Prefix: find-min-greater-eq-vec, find-min-greater-eq-set
+* Prefix: find-min-geq-vec, find-min-geq-set
 * Description: val以上で最小の要素を返す
 * 計算量: O(log N)
 
@@ -254,7 +254,7 @@
 * 計算量: O(log N)
 
 ## 指定した値以下で最大の要素の探索
-* Prefix: find-max-less-eq-vec, find-max-less-eq-set
+* Prefix: find-max-leq-vec, find-max-leq-set
 * Description: val以下で最大の要素を返す
 * 計算量: O(log N)
 
@@ -263,9 +263,15 @@
 * Description: valより小さい最大の要素を返す
 * 計算量: O(log N)
 
+# 転倒数
+* Prefix: inversion
+* Description: 転倒数を計算する
+* 計算量: O(N log N)
+* 依存ライブラリ: 座標圧縮(pos-comp), セグメント木(seg-tree)
+
 # その他ライブラリ(Misc.code-snippets)
 ## 座標圧縮
-* Prefix: pos-comp
+* Prefix: pos-comp-class
 * Description: 座標圧縮を行う
 * 計算量: O(N log N)
 
