@@ -8,6 +8,7 @@ using namespace std;
 // [Start] Matrix
 // [Prefix] matrix-class
 // [Verified] 行列積: n, m<=10^2, ITP1_7_D(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ITP1_7_D&lang=ja)
+// [Verified] 行列積: n, m<=10^3, Matrix Product(https://judge.yosupo.jp/problem/matrix_product)
 // 行列クラス
 template <class T>
 class Matrix {
