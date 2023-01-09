@@ -369,16 +369,15 @@ class CombModTable {
 
 template <class T>
 CombModTable<T>::CombModTable(const int N)
-    : N_(N), factorial_(N + 1, 0), inversion_(N + 1, 0), fact_inv_(N + 1, 0) {
-   assert(N >= 1);
+    : N_(max(1, N)), factorial_(N_ + 1, 0), inversion_(N_ + 1, 0), fact_inv_(N_ + 1, 0) {
    factorial_[0] = factorial_[1] = 1;
    inversion_[1] = 1;
    fact_inv_[0] = fact_inv_[1] = 1;
 
    static const long long MOD = T().GetMod();
-   assert(MOD > N);
+   assert(MOD > N_);
 
-   for (int i = 2; i <= N; i++) {
+   for (int i = 2; i <= N_; i++) {
       factorial_[i] = factorial_[i - 1];
       factorial_[i] *= i;
 
