@@ -262,3 +262,24 @@ TEST(MathTest, TestPrimeTableIntervalFactor) {
       ASSERT_EQ(P(101, 1), list[2]);
    }
 }
+
+TEST(MathTest, TestSqrtInt) {
+   using P = pair<long long, long long>;
+
+   {
+      long long n = 0;
+      ASSERT_EQ(P(0, 0), sqrt_int(n));
+   }
+   {
+      long long n = 1;
+      ASSERT_EQ(P(1, 1), sqrt_int(n));
+   }
+   {
+      long long n = 2;
+      ASSERT_EQ(P(1, 2), sqrt_int(n));
+   }
+   {
+      long long n = numeric_limits<long long>::max();
+      ASSERT_EQ(P(3037000499, 3037000500), sqrt_int(n));
+   }
+}

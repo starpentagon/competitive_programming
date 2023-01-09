@@ -641,3 +641,24 @@ long long CalcExponentOfFactorial(long long p, long long N) {
    return cnt;
 }
 // [End] exponent of factorial
+
+// [Start] floor/ceil of sqrt(n)
+// [Prefix] sqrt-int-func
+// [Verify] 平方数判定, N<=10^4: ABC_086「B - 1 21」(https://atcoder.jp/contests/abc086/submissions/me)
+// 平方根のfloor, ceilを算出する
+pair<long long, long long> sqrt_int(long long n) {
+   assert(n >= 0);
+   if (n == 0) return {0, 0};
+
+   long long x = (long long)round(sqrtl(n));
+   if ((n % x) == 0 && x == n / x) return {x, x};
+
+   // long longの範囲で平方根のfloorの最大値はsqrt(9223372036854775807)=3037000499
+   static constexpr long long kFloorMax = 3037000499;
+   x = min(x, kFloorMax);
+
+   long long xx = x * x;  // x <= kFloorMaxの範囲では x*xはlong longに収まる
+   if (xx > n) x--;
+   return {x, x + 1};
+}
+// [End] floor/ceil of sqrt(n)

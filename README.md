@@ -28,6 +28,11 @@
 * Description: 繰り返し二乗法でx^nを求める 
 * 計算量: $O(\log n)$
 
+## $\sqrt{n}$のfloor/ceil計算
+* Prefix: sqrt-int-func
+* Description: 平方根のfloor, ceilを求める。nの平方数判定も可能。
+* 計算量: $O(\log \log n)$ 程度
+
 ## 最大公約数
 * Prefix: gcm-func
 * Description: 整数m, nの最大公約数を求める
