@@ -33,16 +33,6 @@
 * Description: 平方根のfloor, ceilを求める。nの平方数判定も可能。
 * 計算量: $O(\log \log n)$ 程度
 
-## 最大公約数
-* Prefix: gcm-func
-* Description: 整数m, nの最大公約数を求める
-* 計算量: $O(\log(\max\{m, n\}))$
-
-## 最小公倍数
-* Prefix: lcm-func
-* Description: 整数m, nの最小公倍数を求める
-* 計算量: $O(\log(\max\{m, n\}))$
-
 ## 組合せ数(DP版)
 * Prefix: comb-dp-class
 * Description: 組合せ数を求める。N=2000程度まで適用可能

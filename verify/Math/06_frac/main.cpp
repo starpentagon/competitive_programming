@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <cassert>
+#include <numeric>
 
 using namespace std;
 
@@ -18,37 +19,7 @@ template<class T> ostream& operator<<(ostream& os, vector<T>& vec){ rep(i, vec.s
 using ll = long long;
 using ull = unsigned long long;
 
-// 最大公約数を求める
-// 計算量: O(log max(m, n))
-long long GCD(long long m, long long n) {
-   assert(m >= 0 && n >= 0);
-
-   if (m < n) return GCD(n, m);
-   // m >= n
-   if (n == 0) return m;
-
-   long long r = 0;
-
-   while ((r = m % n)) {
-      m = n;
-      n = r;
-   }
-
-   return n;
-}
-
-// 最小公倍数を求める
-// 計算量: O(log max(m, n))
-// 依存ライブラリ: 最大公約数(GCM)
-long long LCM(long long m, long long n) {
-   assert(m > 0 && n > 0);
-
-   long long gcd = GCD(m, n);
-   return m / gcd * n;
-}
-
 // 有理数クラス
-// 依存ライブラリ: 最大公約数(GCM), 最小公倍数(LCM)
 class Fraction {
   public:
    // @param numerator 分子
@@ -67,10 +38,10 @@ class Fraction {
       }
 
       if (reduce) {
-         long long gcd = GCD(abs(n_), d_);
+         long long g = gcd(abs(n_), d_);
 
-         n_ /= gcd;
-         d_ /= gcd;
+         n_ /= g;
+         d_ /= g;
       }
    }
 
@@ -125,16 +96,16 @@ class Fraction {
    Fraction& operator+=(const Fraction& rhs) {
       auto [n, d] = rhs.get_num_denom();
 
-      auto lcm = LCM(d, d_);
+      auto l = lcm(d, d_);
 
-      n_ = n_ * (lcm / d_) + n * (lcm / d);
-      d_ = lcm;
+      n_ = n_ * (l / d_) + n * (l / d);
+      d_ = l;
 
       if (reduce_) {
-         auto gcd = GCD(abs(n_), d_);
+         auto g = gcd(abs(n_), d_);
 
-         n_ /= gcd;
-         d_ /= gcd;
+         n_ /= g;
+         d_ /= g;
       }
 
       return *this;
@@ -149,9 +120,9 @@ class Fraction {
       auto [n, d] = rhs.get_num_denom();
 
       if (reduce_ && !rhs.reduce_) {
-         auto gcd = GCD(abs(n), d);
-         n /= gcd;
-         d /= gcd;
+         auto g = gcd(abs(n), d);
+         n /= g;
+         d /= g;
       }
 
       n_ *= n;

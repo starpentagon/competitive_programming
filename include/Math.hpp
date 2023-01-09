@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <numeric>
 #include <cassert>
 #include <vector>
 #include <algorithm>
@@ -305,42 +306,6 @@ T ipow(T x, long long n) {
 }
 // [End] Power of n
 
-// [Start] GCD
-// [Prefix] gcd-func
-// 最大公約数を求める
-// 計算量: O(log max(m, n))
-// [Verified] m,n<=10^9, ALDS1_1_B(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=ALDS1_1_B&lang=ja)
-long long GCD(long long m, long long n) {
-   assert(m >= 0 && n >= 0);
-
-   if (m < n) return GCD(n, m);
-   // m >= n
-   if (n == 0) return m;
-
-   long long r = 0;
-
-   while ((r = m % n)) {
-      m = n;
-      n = r;
-   }
-
-   return n;
-}
-// [End] GCD
-
-// [Start] LCM
-// [Prefix] lcm-func
-// 最小公倍数を求める
-// 計算量: O(log max(m, n))
-// 依存ライブラリ: 最大公約数(GCM)
-long long LCM(long long m, long long n) {
-   assert(m > 0 && n > 0);
-
-   long long gcd = GCD(m, n);
-   return m / gcd * n;
-}
-// [End] LCM
-
 // [Start] Combination(nCk)
 // [Prefix] comb-dp-class
 // 組合せ数 nCk を求める(DP版)
@@ -444,7 +409,6 @@ T CombModTable<T>::get(const int n, const int k) const {
 // [Prefix] fraction-class
 // [Verified] 比較演算子, n<=2*10^5, ABC_225「E - 7」(https://atcoder.jp/contests/abc225/tasks/abc225_e)
 // 有理数クラス
-// 依存ライブラリ: 最大公約数(GCM), 最小公倍数(LCM)
 class Fraction {
   public:
    // @param numerator 分子
@@ -463,10 +427,10 @@ class Fraction {
       }
 
       if (reduce) {
-         long long gcd = GCD(abs(n_), d_);
+         long long g = gcd(abs(n_), d_);
 
-         n_ /= gcd;
-         d_ /= gcd;
+         n_ /= g;
+         d_ /= g;
       }
    }
 
@@ -521,16 +485,16 @@ class Fraction {
    Fraction& operator+=(const Fraction& rhs) {
       auto [n, d] = rhs.get_num_denom();
 
-      auto lcm = LCM(d, d_);
+      auto l = lcm(d, d_);
 
-      n_ = n_ * (lcm / d_) + n * (lcm / d);
-      d_ = lcm;
+      n_ = n_ * (l / d_) + n * (l / d);
+      d_ = l;
 
       if (reduce_) {
-         auto gcd = GCD(abs(n_), d_);
+         auto g = gcd(abs(n_), d_);
 
-         n_ /= gcd;
-         d_ /= gcd;
+         n_ /= g;
+         d_ /= g;
       }
 
       return *this;
@@ -545,9 +509,9 @@ class Fraction {
       auto [n, d] = rhs.get_num_denom();
 
       if (reduce_ && !rhs.reduce_) {
-         auto gcd = GCD(abs(n), d);
-         n /= gcd;
-         d /= gcd;
+         auto g = gcd(abs(n), d);
+         n /= g;
+         d /= g;
       }
 
       n_ *= n;
