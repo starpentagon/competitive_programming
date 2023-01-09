@@ -57,32 +57,35 @@ T PosCompression<T>::Decode(const size_t index) const {
 // [End] Position Compression
 
 void Cout() {
+   // clang-format off
+
    // [Start] cout(float)
    // [Prefix] cout-float-inline
-   cout << fixed << setprecision(15);
+cout << fixed << setprecision(15);
    // [End] cout(float)
 
    int ans = 0;
 
    // [Start] print ans
    // [Prefix] p-ans-inline
-   cout << ans << endl;
+cout << ans << endl;
    // [End] print ans
 
    // [Start] print Yes
    // [Prefix] p-yes-inline
-   cout << "Yes" << endl;
+cout << "Yes" << endl;
    // [End] print Yes
 
    // [Start] print No
    // [Prefix] p-no-inline
-   cout << "No" << endl;
+cout << "No" << endl;
    // [End] print No
 
    // [Start] print -1
    // [Prefix] p-neg-inline
-   cout << -1 << endl;
+cout << -1 << endl;
    // [End] print -1
+   // clang-format on
 }
 
 // [Start] Hash of pair-type

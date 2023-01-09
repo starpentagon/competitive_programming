@@ -15,76 +15,84 @@ using namespace std;
 
 void DirectedEdgeLoad() {
    int N, M;
+   // clang-format off
    // [Start] Directed edge load
    // [Prefix] g-load-directed-edge-inline
-   // N: nodes, M: edges
-   vector<vector<int>> adj_list(N + 1, vector<int>());
+// N: nodes, M: edges
+vector<vector<int>> adj_list(N + 1, vector<int>());
 
-   for (int i = 0; i < M; i++) {
-      int u, v;
-      cin >> u >> v;
+for (int i = 0; i < M; i++) {
+   int u, v;
+   cin >> u >> v;
 
-      adj_list[u].emplace_back(v);
-   }
+   adj_list[u].emplace_back(v);
+}
    // [End] Directed edge load
+   // clang-format on
 }
 
 void UndirectedEdgeLoad() {
    int N, M;
+   // clang-format off
    // [Start] Undirected edge load
    // [Prefix] g-load-undirected-edge-inline
-   // N: nodes, M: edges
-   vector<vector<int>> adj_list(N + 1, vector<int>());
+// N: nodes, M: edges
+vector<vector<int>> adj_list(N + 1, vector<int>());
 
-   for (int i = 0; i < M; i++) {
-      int u, v;
-      cin >> u >> v;
+for (int i = 0; i < M; i++) {
+   int u, v;
+   cin >> u >> v;
 
-      adj_list[u].emplace_back(v);
-      adj_list[v].emplace_back(u);
-   }
+   adj_list[u].emplace_back(v);
+   adj_list[v].emplace_back(u);
+}
    // [End] Undirected edge load
+   // clang-format on
 }
 
 void DirectedWeightEdgeLoad() {
    int N, M;
+   // clang-format off
    // [Start] Directed weight edge load
    // [Prefix] g-load-directed-weight-edge-inline
-   // N: nodes, M: edges
-   using Edge = pair<int, long long>;  // to, weight
-   vector<vector<Edge>> adj_list(N + 1, vector<Edge>());
+// N: nodes, M: edges
+using Edge = pair<int, long long>;  // to, weight
+vector<vector<Edge>> adj_list(N + 1, vector<Edge>());
 
-   for (int i = 0; i < M; i++) {
-      int u, v;
-      cin >> u >> v;
+for (int i = 0; i < M; i++) {
+   int u, v;
+   cin >> u >> v;
 
-      long long w;
-      cin >> w;
+   long long w;
+   cin >> w;
 
-      adj_list[u].emplace_back(v, w);
-   }
+   adj_list[u].emplace_back(v, w);
+}
    // [End] Directed weight edge load
+   // clang-format on
 }
 
 void UndirectedWeightEdgeLoad() {
    int N, M;
+   // clang-format off
    // [Start] Undirected weight edge load
-   // [Prefix] g-load-directed-weight-edge-inline
-   // N: nodes, M: edges
-   using Edge = tuple<int, long long>;  // to, weight
-   vector<vector<Edge>> adj_list(N + 1, vector<Edge>());
+   // [Prefix] g-load-undirected-weight-edge-inline
+// N: nodes, M: edges
+using Edge = tuple<int, long long>;  // to, weight
+vector<vector<Edge>> adj_list(N + 1, vector<Edge>());
 
-   for (int i = 0; i < M; i++) {
-      int u, v;
-      cin >> u >> v;
+for (int i = 0; i < M; i++) {
+   int u, v;
+   cin >> u >> v;
 
-      long long w;
-      cin >> w;
+   long long w;
+   cin >> w;
 
-      adj_list[u].emplace_back(v, w);
-      adj_list[v].emplace_back(u, w);
-   }
+   adj_list[u].emplace_back(v, w);
+   adj_list[v].emplace_back(u, w);
+}
    // [End] Undirected weight edge load
+   // clang-format on
 }
 
 // [Start] Shortest path(BFS)
@@ -125,6 +133,7 @@ vector<long long> ShortestPathBFS(const vector<vector<int>>& adj_list, const int
 // [Start] Shortest path(Dijkstra)
 // [Prefix] g-shortest-dijkstra
 // [Verified] N<=10^5, E<=5*10^5, GRL_1_A(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_1_A&lang=ja)
+// [Verified] N, E<=5*10^5: Shortest Path(https://judge.yosupo.jp/problem/shortest_path)
 // ダイクストラ法で単一始点最短路を求める
 // @pre 各エッジの重みが非負であること
 // 計算量: O(E + N log N)
@@ -321,6 +330,7 @@ pair<bool, vector<vector<long long>>> AllShortestPathWarshallFloyd(const vector<
 
 // [Start] Find shortest path
 // [Prefix] g-find-shortest-path-func
+// [Verified] N, E<=5*10^5: Shortest Path(https://judge.yosupo.jp/problem/shortest_path)
 // ノード間の最短経路を求める(重み付き用)
 // @param start, node: 最短経路を求めるノード
 // @param min_weight_list: startから各ノードの最短距離が格納されたテーブル
@@ -341,15 +351,22 @@ vector<int> FindShortestPath(const int start, const int end, const vector<vector
    }
 
    vector<int> back_path;
+   vector<bool> visited(N + 1, false);
+   constexpr long long INF = numeric_limits<long long>::max();
+
    int node = end;
 
    back_path.push_back(node);
+   visited[node] = true;
 
-   while (min_weight_list[node] != 0) {
+   while (node != start) {
       for (auto [from, weight] : rev_adj_list[node]) {
+         if (visited[from] || min_weight_list[from] == INF) continue;
+
          if (min_weight_list[node] == min_weight_list[from] + weight) {
             back_path.push_back(from);
             node = from;
+            visited[from] = true;
             break;
          }
       }
