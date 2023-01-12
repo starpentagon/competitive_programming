@@ -138,59 +138,67 @@ X SegmentTree<X>::sub_query(size_t a, size_t b, size_t k, size_t l, size_t r) co
 
 void SegOperMin() {
    vector<long long> init_array;
+   // clang-format off
    // [Start] Segment Tree(Min)
    // [Prefix] seg-oper-min-inline
-   // - 最小値
-   using X = long long;
+// - 最小値
+using X = long long;
 
-   auto oper = [](X x, X y) -> X { return min(x, y); };
-   const X unit_x = numeric_limits<X>::max();  // Xの単位元
+auto oper = [](X x, X y) -> X { return min(x, y); };
+const X unit_x = numeric_limits<X>::max();  // Xの単位元
 
-   SegmentTree<X> seg_tree(init_array, oper, unit_x);
+SegmentTree<X> seg_tree(init_array, oper, unit_x);
    // [End] Segment Tree(Min)
+   // clang-format on
 }
 
 void SegOperMax() {
    vector<long long> init_array;
 
+   // clang-format off
    // [Start] Segment Tree(Max)
    // [Prefix] seg-oper-max-inline
-   // 最大値
-   using X = long long;
+// 最大値
+using X = long long;
 
-   auto oper = [](X x, X y) -> X { return max(x, y); };
-   const X unit_x = numeric_limits<X>::min();  // Xの単位元
+auto oper = [](X x, X y) -> X { return max(x, y); };
+const X unit_x = numeric_limits<X>::min();  // Xの単位元
 
-   SegmentTree<X> seg_tree(init_array, oper, unit_x);
+SegmentTree<X> seg_tree(init_array, oper, unit_x);
    // [End] Segment Tree(Max)
+   // clang-format on
 }
 
 void SegOperSum() {
    vector<long long> init_array;
 
+   // clang-format off
    // [Start] Segment Tree(Sum)
    // [Prefix] seg-oper-sum-inline
-   // 合計
-   using X = long long;
+// 合計
+using X = long long;
 
-   auto oper = [](X x, X y) -> X { return x + y; };
-   const X unit_x = 0;  // Xの単位元
+auto oper = [](X x, X y) -> X { return x + y; };
+const X unit_x = 0;  // Xの単位元
 
-   SegmentTree<X> seg_tree(init_array, oper, unit_x);
+SegmentTree<X> seg_tree(init_array, oper, unit_x);
    // [End] Segment Tree(Sum)
+   // clang-format on
 }
 
 void SegOperXOR() {
    vector<long long> init_array;
 
+   // clang-format off
    // [Start] Segment Tree(XOR)
    // [Prefix] seg-oper-xor-inline
-   // XOR
-   using X = long long;
+// XOR
+using X = long long;
 
-   auto oper = [](X x, X y) -> X { return x ^ y; };
-   const X unit_x = 0;  // Xの単位元
+auto oper = [](X x, X y) -> X { return x ^ y; };
+const X unit_x = 0;  // Xの単位元
 
-   SegmentTree<X> seg_tree(init_array, oper, unit_x);
+SegmentTree<X> seg_tree(init_array, oper, unit_x);
    // [End] Segment Tree(XOR)
+   // clang-format on
 }

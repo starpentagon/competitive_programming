@@ -195,44 +195,52 @@ X LazySegmentTree<X, M>::sub_query(size_t a, size_t b, size_t k, size_t l, size_
 
 void LazySegOper() {
    {
+      // clang-format off
       // [Start] Lazy Segment Tree(Sum)
       // [Prefix] laz-seg-oper-sum-inline
-      using X = long long;
+using X = long long;
 
-      // 合計
-      auto oper = [](X x, X y) -> X { return x + y; };
-      const X unit_x = 0;  // Xの単位元
-      // [End] Lazy Segment Tree(Sum)
+// 合計
+auto oper = [](X x, X y) -> X { return x + y; };
+const X unit_x = 0;  // Xの単位元
+// [End] Lazy Segment Tree(Sum)
+      // clang-format on
    }
    {
+      // clang-format off
       // [Start] Lazy Segment Tree(Min)
       // [Prefix] laz-seg-oper-min-inline
-      using X = long long;
+using X = long long;
 
-      // 最小値
-      auto oper = [](X x, X y) -> X { return min(x, y); };
-      const X unit_x = numeric_limits<X>::max();  // Xの単位元
-      // [End] Lazy Segment Tree(Min)
+// 最小値
+auto oper = [](X x, X y) -> X { return min(x, y); };
+const X unit_x = numeric_limits<X>::max();  // Xの単位元
+// [End] Lazy Segment Tree(Min)
+      // clang-format on
    }
    {
+      // clang-format off
       // [Start] Lazy Segment Tree(Max)
       // [Prefix] laz-seg-oper-max-inline
-      using X = long long;
+using X = long long;
 
-      // 最大値
-      auto oper = [](X x, X y) -> X { return max(x, y); };
-      const X unit_x = numeric_limits<X>::min();  // Xの単位元
+// 最大値
+auto oper = [](X x, X y) -> X { return max(x, y); };
+const X unit_x = numeric_limits<X>::min();  // Xの単位元
       // [End] Lazy Segment Tree(Max)
+                                                  // clang-format on
    }
    {
+      // clang-format off
       // [Start] Lazy Segment Tree(XOR)
       // [Prefix] laz-seg-oper-xor-inline
-      using X = long long;
+using X = long long;
 
-      // XOR
-      auto oper = [](X x, X y) -> X { return x ^ y; };
-      const X unit_x = 0;  // Xの単位元
+// XOR
+auto oper = [](X x, X y) -> X { return x ^ y; };
+const X unit_x = 0;  // Xの単位元
       // [End] Lazy Segment Tree(XOR)
+                           // clang-format on
    }
 }
 
@@ -243,19 +251,21 @@ void LazySegUpdateOper() {
       auto oper = [](X x, X y) -> X { return x ^ y; };
       const X unit_x = 0;  // Xの単位元
 
+      // clang-format off
       // [Start] Lazy Segment Tree(range update)
       // [Prefix] laz-seg-range-update-inline
-      // 区間更新
-      using M = long long;
+// 区間更新
+using M = long long;
 
-      auto eval_op = [](X x, M m) -> X { return m; };
-      const M unit_m = numeric_limits<M>::max();  // Mの単位元
+auto eval_op = [](X x, M m) -> X { return m; };
+const M unit_m = numeric_limits<M>::max();  // Mの単位元
 
-      auto lazy_op = [](M m1, M m2) -> M { return m2; };
-      auto lazy_p_op = [](M m, size_t n) -> M { return; };  // operがsumの場合は m * nとする, min/maxは区間に依存しないのでmを返す, XORはnが偶なら0, 奇ならm
+auto lazy_op = [](M m1, M m2) -> M { return m2; };
+auto lazy_p_op = [](M m, size_t n) -> M { return; };  // operがsumの場合は m * nとする, min/maxは区間に依存しないのでmを返す, XORはnが偶なら0, 奇ならm
 
-      LazySegmentTree<X, M> laz_seg_tree(init_array, oper, eval_op, lazy_op, lazy_p_op, unit_x, unit_m);
+LazySegmentTree<X, M> laz_seg_tree(init_array, oper, eval_op, lazy_op, lazy_p_op, unit_x, unit_m);
       // [End] Lazy Segment Tree(range update)
+      // clang-format on
    }
    {
       vector<long long> init_array;
@@ -263,18 +273,20 @@ void LazySegUpdateOper() {
       auto oper = [](X x, X y) -> X { return x ^ y; };
       const X unit_x = 0;  // Xの単位元
 
+      // clang-format off
       // [Start] Lazy Segment Tree(range add)
       // [Prefix] laz-seg-range-add-inline
-      // 区間加算
-      using M = long long;
+// 区間加算
+using M = long long;
 
-      auto eval_op = [](X x, M m) -> X { return x + m; };
-      const M unit_m = 0;  // Mの単位元
+auto eval_op = [](X x, M m) -> X { return x + m; };
+const M unit_m = 0;  // Mの単位元
 
-      auto lazy_op = [](M m1, M m2) -> M { return m1 + m2; };
-      auto lazy_p_op = [](M m, size_t n) -> M { return; };  // operがsumの場合は m * nとする, min/maxは区間に依存しないのでmを返す, XORはnが偶なら0, 奇ならm
+auto lazy_op = [](M m1, M m2) -> M { return m1 + m2; };
+auto lazy_p_op = [](M m, size_t n) -> M { return; };  // operがsumの場合は m * nとする, min/maxは区間に依存しないのでmを返す, XORはnが偶なら0, 奇ならm
 
-      LazySegmentTree<X, M> laz_seg_tree(init_array, oper, eval_op, lazy_op, lazy_p_op, unit_x, unit_m);
+LazySegmentTree<X, M> laz_seg_tree(init_array, oper, eval_op, lazy_op, lazy_p_op, unit_x, unit_m);
       // [End] Lazy Segment Tree(range add)
+      // clang-format on
    }
 }
