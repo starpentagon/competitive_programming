@@ -613,7 +613,7 @@ pair<long long, long long> sqrt_int(long long n) {
    assert(n >= 0);
    if (n == 0) return {0, 0};
 
-   long long x = (long long)round(sqrtl(n));
+   long long x = (long long)roundl(sqrtl((long double)n));
    if ((n % x) == 0 && x == n / x) return {x, x};
 
    // long longの範囲で平方根のfloorの最大値はsqrt(9223372036854775807)=3037000499
