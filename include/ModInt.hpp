@@ -178,6 +178,11 @@ constexpr ModIntStatic<MOD> ModIntStatic<MOD>::pow(long long n) const {
    ModIntStatic<MOD> val(1);
    ModIntStatic<MOD> x(x_);
 
+   if (n < 0) {
+      n = -n;
+      x = x.inv();
+   }
+
    while (n > 0) {
       if ((n & 1LL) == 1) {
          // iビット目が1の場合、x^(2^i)をかける
@@ -374,6 +379,11 @@ ModIntDynamic ModIntDynamic::pow(long long n) const {
 
    ModIntDynamic val(1);
    ModIntDynamic x(x_);
+
+   if (n < 0) {
+      n = -n;
+      x = x.inv();
+   }
 
    while (n > 0) {
       if ((n & 1LL) == 1) {

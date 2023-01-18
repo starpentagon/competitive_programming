@@ -32,6 +32,11 @@ TEST(ModIntStatic, TestMul) {
    val = 2;
    val = val.pow(10);
    EXPECT_EQ(1024 % 11, val);
+
+   {
+      ModIntStatic<11> val(2);
+      EXPECT_EQ(val.pow(-1), 6);
+   }
 }
 
 TEST(ModIntStatic, TestDiv) {
@@ -82,5 +87,10 @@ TEST(ModIntDynamic, TestDiv) {
    ModIntDynamic val(2);
 
    auto inv = val.inv();
+
    EXPECT_EQ(1, val * inv);
+   {
+      ModIntDynamic val(2);
+      EXPECT_EQ(val.pow(-1), 6);
+   }
 }
