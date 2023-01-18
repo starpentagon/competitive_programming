@@ -78,7 +78,7 @@ void UndirectedWeightEdgeLoad() {
    // [Start] Undirected weight edge load
    // [Prefix] g-load-undirected-weight-edge-inline
 // N: nodes, M: edges
-using Edge = tuple<int, long long>;  // to, weight
+using Edge = pair<int, long long>;  // to, weight
 vector<vector<Edge>> adj_list(N + 1, vector<Edge>());
 
 for (int i = 0; i < M; i++) {
@@ -295,7 +295,7 @@ pair<bool, vector<vector<long long>>> AllShortestPathWarshallFloyd(const vector<
    for (int node = 1; node <= N; node++) {
       min_weight_list[node][node] = 0;
 
-      for (const auto [to, weight] : adj_list[node]) {
+      for (const auto& [to, weight] : adj_list[node]) {
          min_weight_list[node][to] = weight;
       }
    }
