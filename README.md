@@ -296,3 +296,8 @@
 * Prefix: dp-lis-func
 * Description: 最長増加部分列を求める
 * 計算量: O(N log N)
+
+# インタラクティブ問題
+* Prefix: interactive-class
+* Description: インタラクティブ問題用フレームワーク
+* 計算量: -
