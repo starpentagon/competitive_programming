@@ -301,3 +301,8 @@
 * Prefix: interactive-class
 * Description: インタラクティブ問題用フレームワーク
 * 計算量: -
+
+# マクロ/テンプレート
+* Prefix: macro-templates
+* Description: rep, chmin/max, vector用cin/outなど
+* 計算量: -
