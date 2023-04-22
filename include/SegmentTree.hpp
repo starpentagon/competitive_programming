@@ -96,7 +96,7 @@ SegmentTree<X>::SegmentTree(const vector<X>& val_list, std::function<X(X, X)> op
 
 template <class X>
 void SegmentTree<X>::build() {
-   for (ll i = (ll)leaf_size_ - 2; i >= 0; i--) {
+   for (long long i = (long long)leaf_size_ - 2; i >= 0; i--) {
       data_[i] = oper_(data_[2 * i + 1], data_[2 * i + 2]);
    }
 }

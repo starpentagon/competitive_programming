@@ -141,6 +141,31 @@
 * Description: 指定回数移動後にどのノードにいるかを返す。
 * 計算量: 事前計算: O(N), startからMoveCount回の移動計算: O(1)
 
+## Euler Tour
+* Prefix: g-euler-tour-class
+* Description: 木に対するEuler Tourを求める(辺, 頂点の重み変更可能)
+* 依存ライブラリ: セグメント木(seg-tree-class), SparseTable(sp-table-class)
+
+### 前処理
+* 計算量: O(N log N)
+* LCAが不要の場合はSparseTableの構築をskipすることでO(N)に高速化可能
+
+### 部分木に対する操作
+* サイズの取得: (O(1))
+* ノードが部分木に含まれるかの判定: (O(1))
+* 部分木の辺, 頂点の重みの合計: (O(log N)), 重みの更新がなければセグメント木を累積和に変えることでO(1)に高速化
+
+### rootからのパスに対する操作
+* 深さの取得: O(1)
+* パス上の辺, 頂点の重みの合計: (O(log N)), 重みの更新がなければセグメント木を累積和に変えることでO(1)に高速化
+
+### LCA
+* LCAの取得: O(1)
+
+### 2頂点間のパスに対する操作
+* パスの長さ: O(1)
+* パス上の辺, 頂点の重みの合計: (O(log N)), 重みの更新がなければセグメント木を累積和に変えることでO(1)に高速化
+
 # Grid操作
 
 ## Gridのロード
@@ -229,7 +254,7 @@
 * 計算量: O(log(|kTrivialOK - kTrivialNG|))
 
 ## 二分探索(浮動小数点)
-* Prefix: bin-search-dbl
+* Prefix: bin-search-dbl大阪府堺市北区長曽根町３０４３番地４
 * Description: 条件を満たす境界(最大/最小)を二分探索で求める。
 * 計算量: O(log(|kTrivialOK - kTrivialNG|))
 
