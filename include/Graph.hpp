@@ -1154,11 +1154,11 @@ StronglyConnectedComponents::StronglyConnectedComponents(int N, const vector<vec
 
 void StronglyConnectedComponents::Build() {
    // 帰りがけ順の番号を記録する
-   vector<int> node_post_order(N + 1, -1);     // node -> 帰りがけ順の番号
-   vector<int> post_order_to_node(N + 1, -1);  // 帰りがけ順 -> node
+   vector<int> node_post_order(N_ + 1, -1);     // node -> 帰りがけ順の番号
+   vector<int> post_order_to_node(N_ + 1, -1);  // 帰りがけ順 -> node
 
    int post_order = 0;
-   vector<bool> post_order_visited(N + 1, false);
+   vector<bool> post_order_visited(N_ + 1, false);
 
    auto post_ordering = [&](auto post_ordering, int node) -> void {
       assert(!post_order_visited[node]);
@@ -1174,28 +1174,28 @@ void StronglyConnectedComponents::Build() {
       post_order_to_node[post_order] = node;
    };
 
-   for (int node = 1; node <= N; node++) {
+   for (int node = 1; node <= N_; node++) {
       if (post_order_visited[node]) continue;
       post_ordering(post_ordering, node);
    }
 
    // 強連結成分を列挙する
-   node_to_scc_no_.resize(N + 1, -1);
+   node_to_scc_no_.resize(N_ + 1, -1);
    int scc_no = 0;
 
-   scc_adj_list_.resize(N + 1);
+   scc_adj_list_.resize(N_ + 1);
 
    auto scc_numbering = [&](auto scc_numbering, int node) -> void {
       assert(node_to_scc_no_[node] == -1);
       node_to_scc_no_[node] = scc_no;
 
-      for (const auto& [n_node, weight] : rev_adj_list_) {
+      for (const auto& [n_node, weight] : rev_adj_list_[node]) {
          if (node_to_scc_no_[node] != -1) {
             if (node_to_scc_no_[n_node] != scc_no) {
                // 逆辺グラフで先に作られた成分へ移動できる
                // -> 元のグラフで先に作られたSCCから今のSCCへ移動可能
                // ただし、多重辺になる可能性があるため後で取り除く
-               int from_scc = node_scc_no[n_node];
+               int from_scc = node_to_scc_no_[n_node];
                scc_adj_list_[from_scc].emplace_back(scc_no);
             }
 
@@ -1206,7 +1206,7 @@ void StronglyConnectedComponents::Build() {
       }
    };
 
-   for (int post_order = N; post_order >= 1; post_order--) {
+   for (int post_order = N_; post_order >= 1; post_order--) {
       int node = post_order_to_node[post_order];
 
       if (node_to_scc_no_[node] != -1) continue;
@@ -1220,7 +1220,7 @@ void StronglyConnectedComponents::Build() {
    // 多重辺になる可能性があるため除去する
    for (int i = 1; i <= scc_no; i++) {
       // (強連結成分は昇順で記録されているためソート不要)
-      erase(unique(scc_adj_list_[i].begin(), scc_adj_list_[i].end()), scc_adj_list_[i].end());
+      scc_adj_list_[i].erase(unique(scc_adj_list_[i].begin(), scc_adj_list_[i].end()), scc_adj_list_[i].end());
    }
 }
 
