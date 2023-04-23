@@ -96,6 +96,7 @@ void SparseTableMinOper() {
    // [Prefix] sp-table-min-oper-inline
    auto fx = [](ll x, ll y) -> ll { return min(x, y); };
    // [End] Min operator(Sparse Table)
+   assert(fx(1, 2));
 }
 
 void SparseTableMaxOper() {
@@ -104,4 +105,5 @@ void SparseTableMaxOper() {
    // [Prefix] sp-table-max-oper-inline
    auto fx = [](ll x, ll y) -> ll { return max(x, y); };
    // [End] Max operator(Sparse Table)
+   assert(fx(1, 2));
 }
