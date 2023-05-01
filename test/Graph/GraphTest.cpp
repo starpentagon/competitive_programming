@@ -290,3 +290,96 @@ TEST(GraphTest, TestEulerPathLength) {
    EXPECT_EQ(4, euler_tour.GetPathLength(4, 6));
    EXPECT_EQ(3, euler_tour.GetPathLength(6, 5));
 }
+
+TEST(GraphTest, TestSCC) {
+   {
+      int N = 4;
+      vector<vector<int>> adj_list(N + 1);
+
+      // S1(1) -> S2(2, 4) -> S3(3)
+      adj_list[1].emplace_back(2);
+      adj_list[2].emplace_back(3);
+      adj_list[2].emplace_back(4);
+      adj_list[4].emplace_back(2);
+
+      StronglyConnectedComponents scc(adj_list);
+
+      EXPECT_EQ(3, scc.GetSCCSize());
+      EXPECT_EQ(1, scc.GetNodeSCCNo(1));
+      EXPECT_EQ(2, scc.GetNodeSCCNo(2));
+      EXPECT_EQ(3, scc.GetNodeSCCNo(3));
+      EXPECT_EQ(2, scc.GetNodeSCCNo(4));
+
+      // SCC間の隣接リスト
+      auto scc_graph = scc.GetSCCGraph();
+
+      ASSERT_EQ(scc_graph[1].size(), 1);
+      EXPECT_EQ(scc_graph[1][0], 2);
+
+      ASSERT_EQ(scc_graph[2].size(), 1);
+      EXPECT_EQ(scc_graph[2][0], 3);
+
+      EXPECT_EQ(scc_graph[3].size(), 0);
+
+      // SCCごとのノード番号
+      auto scc_nodes = scc.GetSCCNoedGroup();
+
+      ASSERT_EQ(scc_nodes.size(), 3 + 1);
+
+      ASSERT_EQ(scc_nodes[1].size(), 1);
+      EXPECT_EQ(scc_nodes[1][0], 1);
+
+      ASSERT_EQ(scc_nodes[2].size(), 2);
+      EXPECT_EQ(scc_nodes[2][0], 2);
+      EXPECT_EQ(scc_nodes[2][1], 4);
+
+      ASSERT_EQ(scc_nodes[3].size(), 1);
+      EXPECT_EQ(scc_nodes[3][0], 3);
+   }
+   {
+      int N = 6;
+      vector<vector<int>> adj_list(N + 1);
+
+      // S3(1), S2(2, 3), S1(4, 5, 6)
+      adj_list[1].emplace_back(1);
+      adj_list[2].emplace_back(3);
+      adj_list[3].emplace_back(2);
+      adj_list[4].emplace_back(5);
+      adj_list[5].emplace_back(6);
+      adj_list[6].emplace_back(4);
+
+      StronglyConnectedComponents scc(adj_list);
+
+      EXPECT_EQ(3, scc.GetSCCSize());
+      EXPECT_EQ(3, scc.GetNodeSCCNo(1));
+      EXPECT_EQ(2, scc.GetNodeSCCNo(2));
+      EXPECT_EQ(2, scc.GetNodeSCCNo(3));
+      EXPECT_EQ(1, scc.GetNodeSCCNo(4));
+      EXPECT_EQ(1, scc.GetNodeSCCNo(5));
+      EXPECT_EQ(1, scc.GetNodeSCCNo(6));
+
+      // SCC間の隣接リスト
+      auto scc_graph = scc.GetSCCGraph();
+
+      ASSERT_TRUE(scc_graph[1].empty());
+      ASSERT_TRUE(scc_graph[2].empty());
+      ASSERT_TRUE(scc_graph[3].empty());
+
+      // SCCごとのノード番号
+      auto scc_nodes = scc.GetSCCNoedGroup();
+
+      ASSERT_EQ(scc_nodes.size(), 3 + 1);
+
+      ASSERT_EQ(scc_nodes[3].size(), 1);
+      EXPECT_EQ(scc_nodes[3][0], 1);
+
+      ASSERT_EQ(scc_nodes[2].size(), 2);
+      EXPECT_EQ(scc_nodes[2][0], 2);
+      EXPECT_EQ(scc_nodes[2][1], 3);
+
+      ASSERT_EQ(scc_nodes[1].size(), 3);
+      EXPECT_EQ(scc_nodes[1][0], 4);
+      EXPECT_EQ(scc_nodes[1][1], 5);
+      EXPECT_EQ(scc_nodes[1][2], 6);
+   }
+}

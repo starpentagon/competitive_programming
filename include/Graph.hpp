@@ -1112,23 +1112,39 @@ int EulerTour::GetPathLength(const int node_1, const int node_2) const {
 
 // [Start] Strongly Connected Components
 // [Prefix] g-scc-class
+// 参考: Technical Note - 強連結成分（SCC）(https://hkawabata.github.io/technical-note/note/Algorithm/graph/scc.html)
 class StronglyConnectedComponents {
   public:
-   using Edge = pair<int, long long>;
+   using WeightedEdge = pair<int, long long>;
 
    // @param N 頂点数
    // @param adj_list 隣接リスト(重みあり)
-   StronglyConnectedComponents(int N, const vector<vector<Edge>>& adj_list);
+   // 計算量: O(N+E)
+   // [Verified] N <= 1 * 10^4, E <= 3 * 10^4, Q <= 1 * 10^5: Strongly Connected Components(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_3_C&lang=ja)
+   // [Verified] N <= 5 * 10^5, E <= 5 * 10^5: Strongly Connected Components(https://judge.yosupo.jp/problem/scc)
+   StronglyConnectedComponents(const vector<vector<WeightedEdge>>& adj_list);
+
+   // @param N 頂点数
+   // @param adj_list 隣接リスト(重みなし)
+   // 計算量: O(N+E)
+   StronglyConnectedComponents(const vector<vector<int>>& adj_list);
 
    // 強連結成分数を返す
+   // 計算量: O(1)
    int GetSCCSize() const;
 
    // 強連結成分のグラフを返す
    // @note DAGになっている
+   // 計算量: O(1)
    vector<vector<int>> GetSCCGraph() const;
 
    // 頂点nodeが所属する強連結成分No(1-indexed)を返す
+   // 計算量: O(1)
    int GetNodeSCCNo(int node) const;
+
+   // 「SCC番号 -> SCCに所属するノード番号リスト」の一覧を返す
+   // 計算量: O(1)
+   vector<vector<int>> GetSCCNoedGroup() const;
 
   protected:
    // 強連結成分を求める
@@ -1136,20 +1152,39 @@ class StronglyConnectedComponents {
 
    int N_;  // 頂点数
 
-   vector<vector<Edge>> org_adj_list_;  // グラフの隣接リスト
-   vector<vector<Edge>> rev_adj_list_;  // 逆辺グラフの隣接リスト
+   vector<vector<WeightedEdge>> org_adj_list_;  // グラフの隣接リスト
+   vector<vector<WeightedEdge>> rev_adj_list_;  // 逆辺グラフの隣接リスト
 
-   vector<int> node_to_scc_no_;        // nodeが所属する強連結成分番号
-   vector<vector<int>> scc_adj_list_;  // 強連結成分の隣接リスト(DAGになっている)
+   vector<int> node_to_scc_no_;          // nodeが所属する強連結成分番号
+   vector<vector<int>> scc_adj_list_;    // 強連結成分の隣接リスト(DAGになっている)
+   vector<vector<int>> scc_node_group_;  // 強連結成分 -> 所属するノード番号リスト
 };
 
-StronglyConnectedComponents::StronglyConnectedComponents(int N, const vector<vector<Edge>>& adj_list)
-    : N_(N), org_adj_list_(adj_list), rev_adj_list_(N + 1) {
-   for (int from = 1; from <= N; from++) {
+StronglyConnectedComponents::StronglyConnectedComponents(const vector<vector<WeightedEdge>>& adj_list)
+    : N_(adj_list.size() - 1), org_adj_list_(adj_list), rev_adj_list_(N_ + 1) {
+   assert(!adj_list.empty());
+
+   for (int from = 1; from <= N_; from++) {
       for (const auto& [to, weight] : adj_list[from]) {
          rev_adj_list_[to].emplace_back(from, weight);
       }
    }
+
+   Build();
+}
+
+StronglyConnectedComponents::StronglyConnectedComponents(const vector<vector<int>>& adj_list)
+    : N_(adj_list.size() - 1), org_adj_list_(N_ + 1), rev_adj_list_(N_ + 1) {
+   assert(!adj_list.empty());
+
+   for (int from = 1; from <= N_; from++) {
+      for (const auto& to : adj_list[from]) {
+         org_adj_list_[from].emplace_back(to, 0);
+         rev_adj_list_[to].emplace_back(from, 0);
+      }
+   }
+
+   Build();
 }
 
 void StronglyConnectedComponents::Build() {
@@ -1190,7 +1225,7 @@ void StronglyConnectedComponents::Build() {
       node_to_scc_no_[node] = scc_no;
 
       for (const auto& [n_node, weight] : rev_adj_list_[node]) {
-         if (node_to_scc_no_[node] != -1) {
+         if (node_to_scc_no_[n_node] != -1) {
             if (node_to_scc_no_[n_node] != scc_no) {
                // 逆辺グラフで先に作られた成分へ移動できる
                // -> 元のグラフで先に作られたSCCから今のSCCへ移動可能
@@ -1222,6 +1257,33 @@ void StronglyConnectedComponents::Build() {
       // (強連結成分は昇順で記録されているためソート不要)
       scc_adj_list_[i].erase(unique(scc_adj_list_[i].begin(), scc_adj_list_[i].end()), scc_adj_list_[i].end());
    }
+
+   scc_node_group_.resize(scc_no + 1);
+
+   for (int node = 1; node <= N_; node++) {
+      int node_scc_no = GetNodeSCCNo(node);
+
+      scc_node_group_[node_scc_no].emplace_back(node);
+   }
+}
+
+int StronglyConnectedComponents::GetSCCSize() const {
+   assert(!scc_adj_list_.empty());
+   int scc_count = scc_adj_list_.size() - 1;
+   return scc_count;
+}
+
+int StronglyConnectedComponents::GetNodeSCCNo(int node) const {
+   assert(1 <= node && node <= N_);
+   return node_to_scc_no_[node];
+}
+
+vector<vector<int>> StronglyConnectedComponents::GetSCCGraph() const {
+   return scc_adj_list_;
+}
+
+vector<vector<int>> StronglyConnectedComponents::GetSCCNoedGroup() const {
+   return scc_node_group_;
 }
 
 // [End] Strongly Connected Components
