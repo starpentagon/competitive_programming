@@ -28,6 +28,11 @@ class Matrix {
 
    Matrix<T>& operator=(const Matrix<T>& matrix);
 
+   // 繰り返し二乗法で累乗を計算する
+   // [Verified] 行列累乗, n <=10^12, ABC293「E - Geometric Progression」(https://atcoder.jp/contests/abc293/tasks/abc293_e)
+   // @note n=0ならば単位行列を返す
+   constexpr Matrix<T> pow(long long n) const;
+
    // 添え字演算子
    vector<T>& operator[](int i) {
       return matrix_[i];
@@ -96,6 +101,37 @@ Matrix<T>& Matrix<T>::operator=(const Matrix<T>& matrix) {
    }
 
    return *this;
+}
+
+template <class T>
+constexpr Matrix<T> Matrix<T>::pow(long long n) const {
+   assert(M_ == N_);
+
+   Matrix<T> val(N_, N_);
+   rep(i, N_) val[i][i] = 1;
+
+   if (n == 0) return val;
+
+   Matrix<T> X(matrix_);
+
+   if (n < 0) {
+      // 逆行列には未対応
+      assert(n >= 0);
+      // n = -n;
+      // x = x.inv();
+   }
+
+   while (n > 0) {
+      if ((n & 1LL) == 1) {
+         // iビット目が1の場合、x^(2^i)をかける
+         val *= X;
+      }
+
+      X *= X;
+      n = n >> 1;
+   }
+
+   return val;
 }
 
 template <class T>
