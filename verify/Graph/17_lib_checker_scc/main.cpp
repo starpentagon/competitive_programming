@@ -308,17 +308,14 @@ int main() {
    auto scc_node_group = scc.GetSCCNoedGroup();
    auto scc_graph = scc.GetSCCGraph();
 
-   auto [flag, sorted_scc_no_list] = TopologicalSort(scc_graph);
-   assert(flag);
-
    cout << scc.GetSCCSize() << endl;
 
-   for (auto scc_no : sorted_scc_no_list) {
-      int L = scc_node_group[scc_no].size();
+   for (int n = 1; n <= scc.GetSCCSize(); n++) {
+      int L = scc_node_group[n].size();
       cout << L << " ";
 
       rep(i, L) {
-         cout << scc_node_group[scc_no][i] - 1;
+         cout << scc_node_group[n][i] - 1;
          if (i == L - 1)
             cout << endl;
          else

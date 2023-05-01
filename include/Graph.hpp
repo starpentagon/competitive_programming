@@ -1134,7 +1134,7 @@ class StronglyConnectedComponents {
    int GetSCCSize() const;
 
    // 強連結成分のグラフを返す
-   // @note DAGになっている
+   // @note DAGかつトポロジカルソート済
    // 計算量: O(1)
    vector<vector<int>> GetSCCGraph() const;
 
