@@ -6,9 +6,9 @@ using namespace std;
 // [Prefix] interactive-class
 // [Verified] ABC 244「C - Yamanote Line Game」(https://atcoder.jp/contests/abc244/tasks/abc244_c)
 // インタラクティブ問題用のジャッジクラス
-class Judege {
+class Judge {
   public:
-   Judege() {
+   Judge() {
    }
 
    // ジャッジから情報を受け取る
@@ -20,7 +20,7 @@ class Judege {
   protected:
 };
 
-void Judege::ReceiveInfo() {
+void Judge::ReceiveInfo() {
 #ifdef LOCAL
    // ジャッジをシミュレート
 
@@ -31,7 +31,7 @@ void Judege::ReceiveInfo() {
 #endif
 }
 
-void Judege::SendInfo() {
+void Judge::SendInfo() {
 #ifdef LOCAL
    // ジャッジをシミュレート
 
