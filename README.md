@@ -166,6 +166,10 @@
 * パスの長さ: O(1)
 * パス上の辺, 頂点の重みの合計: (O(log N)), 重みの更新がなければセグメント木を累積和に変えることでO(1)に高速化
 
+## 強連結成分分解(Strongly Connected Components, SCC)
+* Prefix: g-scc-class
+* Description: 強連結成分を求める。強連結成分はトポロジカルソート済
+
 # Grid操作
 
 ## Gridのロード
