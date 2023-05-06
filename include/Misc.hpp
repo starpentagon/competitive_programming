@@ -56,6 +56,26 @@ T PosCompression<T>::Decode(const size_t index) const {
 }
 // [End] Position Compression
 
+// [Start] Run length encoding
+// [Prefix] run-len-func
+// [Verified] N <= 2 * 10^5, ABC299「C - Dango」
+// (value, count)型にランレングス圧縮を行う
+template <class T>
+vector<pair<T, long long>> RunLengthEncoding(const vector<T>& vec) {
+   vector<pair<T, long long>> encode;
+
+   for (auto v : vec) {
+      if (encode.empty() || encode.back().first != v) {
+         encode.emplace_back(v, 1);
+      } else {
+         encode.back().second++;
+      }
+   }
+
+   return encode;
+}
+// [End] Run length encoding
+
 void Cout() {
    // clang-format off
 
