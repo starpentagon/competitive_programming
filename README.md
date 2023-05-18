@@ -299,6 +299,11 @@
 * Description: 座標圧縮を行う
 * 計算量: O(N log N)
 
+## ランレングス圧縮
+* Prefix: run-len-func
+* Description: ランレングス圧縮を行う
+* 計算量: O(N)
+
 ## std::pairのHash関数
 * Prefix: hash-pair-struct
 * Description: std::pair型のハッシュ関数
@@ -334,4 +339,11 @@
 # マクロ/テンプレート
 * Prefix: macro-templates
 * Description: rep, chmin/max, vector用cin/outなど
+* 計算量: -
+
+# 文字列
+
+## Rolling Hash
+* Prefix: rolling-hash-class
+* Description: 文字列のRolling Hash生成(部分文字列の一致判定、最長共通部分列(LCP)の長さなど)
 * 計算量: -
