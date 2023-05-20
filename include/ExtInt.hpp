@@ -202,12 +202,29 @@ class ExtInt {
       return x_ < rhs.value();
    }
 
+   constexpr bool operator<=(const ExtInt& rhs) const noexcept {
+      return x_ <= rhs.value();
+   }
+
+   constexpr bool operator>(const ExtInt& rhs) const noexcept {
+      return x_ > rhs.value();
+   }
+
+   constexpr bool operator>=(const ExtInt& rhs) const noexcept {
+      return x_ >= rhs.value();
+   }
+
    constexpr ExtInt operator/(const ExtInt& rhs) const noexcept {
       return ExtInt(*this) /= rhs;
    }
 
    friend ostream& operator<<(ostream& os, const ExtInt& rhs) {
-      os << rhs.value();
+      if (rhs.IsInf())
+         os << "INF";
+      else if (rhs.IsNegativeInf())
+         os << "-INF";
+      else
+         os << rhs.value();
       return os;
    }
 

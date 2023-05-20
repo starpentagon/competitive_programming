@@ -69,6 +69,11 @@
 * Description: ModIntのMODを実行時に指定するバージョン
 * 計算量: -
 
+# ExtIntライブラリ
+* Prefix: ext-int-class
+* Description: 拡張整数ライブラリ(INF/NINFを含みオーバーフローせず無限大に丸める)
+* 計算量: O(-)
+
 # UnionFindライブラリ
 
 ## UnionFindクラス
