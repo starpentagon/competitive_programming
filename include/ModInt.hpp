@@ -132,7 +132,7 @@ class ModIntStatic {
       return (*this) *= rhs.inv();
    }
 
-   constexpr ModIntStatic operator/(const ModIntStatic rhs) const noexcept {
+   constexpr ModIntStatic operator/(const ModIntStatic& rhs) const noexcept {
       return ModIntStatic(*this) /= rhs;
    }
 
