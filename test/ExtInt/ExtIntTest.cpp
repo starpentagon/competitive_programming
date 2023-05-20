@@ -260,6 +260,16 @@ TEST(ExtIntTest, TestMulFiniteInfinite) {
       val *= 2;
       EXPECT_EQ(eint::INF, val);
    }
+   {
+      ExtInt val(eint::INF);
+      val *= -1;
+      EXPECT_EQ(eint::NINF, val);
+   }
+   {
+      ExtInt val(-2);
+      val *= eint::INF;
+      EXPECT_EQ(eint::NINF, val);
+   }
 
    // 有限 * ninf -> ninf
    {
@@ -271,6 +281,11 @@ TEST(ExtIntTest, TestMulFiniteInfinite) {
       ExtInt val(eint::NINF);
       val *= 2;
       EXPECT_EQ(eint::NINF, val);
+   }
+   {
+      ExtInt val(-1);
+      val *= eint::NINF;
+      EXPECT_EQ(eint::INF, val);
    }
 }
 
