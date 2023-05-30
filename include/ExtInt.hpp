@@ -20,6 +20,15 @@ class ExtInt {
       return x_;
    }
 
+   // キャスト演算子
+   explicit operator int() const {
+      return x_;
+   }
+
+   explicit operator long long() const {
+      return x_;
+   }
+
    // 四則演算
    constexpr ExtInt operator+() const noexcept {
       return *this;
@@ -198,6 +207,15 @@ class ExtInt {
       return (*this) = x_ / rhs.value();
    }
 
+   constexpr ExtInt& operator%=(const ExtInt& rhs) noexcept {
+      assert(IsFinite() && rhs.IsFinite());
+
+      long long v = rhs.value();
+      assert(v != 0);
+
+      return (*this) = x_ % v;
+   }
+
    constexpr bool operator<(const ExtInt& rhs) const noexcept {
       return x_ < rhs.value();
    }
@@ -214,17 +232,18 @@ class ExtInt {
       return x_ >= rhs.value();
    }
 
-   constexpr ExtInt operator/(const ExtInt& rhs) const noexcept {
-      return ExtInt(*this) /= rhs;
-   }
-
    friend ostream& operator<<(ostream& os, const ExtInt& rhs) {
+#ifdef LOCAL
       if (rhs.IsInf())
          os << "INF";
       else if (rhs.IsNegativeInf())
          os << "-INF";
       else
          os << rhs.value();
+#else
+      os << rhs.value();
+#endif
+
       return os;
    }
 
@@ -245,6 +264,14 @@ class ExtInt {
 
    friend constexpr ExtInt operator*(const ExtInt& lhs, const ExtInt& rhs) noexcept {
       return ExtInt(lhs) *= rhs;
+   }
+
+   friend constexpr ExtInt operator/(const ExtInt& lhs, const ExtInt& rhs) noexcept {
+      return ExtInt(lhs) /= rhs;
+   }
+
+   friend constexpr ExtInt operator%(const ExtInt& lhs, const ExtInt& rhs) noexcept {
+      return ExtInt(lhs) %= rhs;
    }
 
    friend constexpr bool operator==(const ExtInt& lhs, const ExtInt& rhs) noexcept {

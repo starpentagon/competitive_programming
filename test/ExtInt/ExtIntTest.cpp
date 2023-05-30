@@ -463,3 +463,84 @@ TEST(ExtIntTest, TestCompare) {
       EXPECT_FALSE(val1 < val2);
    }
 }
+
+TEST(ExtIntTest, TestModFiniteFinite) {
+   // 有限 % 有限
+   {
+      ExtInt val(8);
+      val %= 2;
+      EXPECT_EQ(0, val);
+   }
+   {
+      ExtInt val(5);
+      val %= -2;
+      EXPECT_EQ(1, val);
+   }
+   {
+      ExtInt val(-10);
+      val %= -3;
+      EXPECT_EQ(-1, val);
+   }
+
+   // 有限 % 0, death test
+   {
+      ExtInt val(3);
+      ASSERT_DEATH(val %= 0, ".* failed.");
+   }
+}
+
+TEST(ExtIntTest, TestModInfiniteFinite) {
+   // 無限 % 有限(非ゼロ)
+   {
+      ExtInt val(eint::INF);
+      ASSERT_DEATH(val %= 1, ".* failed.");
+   }
+   {
+      ExtInt val(eint::NINF);
+      ASSERT_DEATH(val %= 2, ".* failed.");
+   }
+}
+
+TEST(ExtIntTest, TestModInfiniteZero) {
+   // 無限 % 有限(ゼロ), death test
+   {
+      ExtInt val(eint::INF);
+      ASSERT_DEATH(val %= 0, ".* failed.");
+   }
+   {
+      ExtInt val(eint::NINF);
+      ASSERT_DEATH(val %= 0, ".* failed.");
+   }
+}
+
+TEST(ExtIntTest, TestModFiniteInfinite) {
+   // 有限 / 無限, death test
+   {
+      ExtInt val(1);
+      ASSERT_DEATH(val %= eint::INF, ".* failed.");
+   }
+   {
+      ExtInt val(0);
+      ASSERT_DEATH(val %= eint::NINF, ".* failed.");
+   }
+}
+
+TEST(ExtIntTest, TestModInfiniteInfinite) {
+   // 無限 / 無限, death test
+   {
+      ExtInt val(eint::INF);
+      ASSERT_DEATH(val %= eint::INF, ".* failed.");
+   }
+   {
+      ExtInt val(eint::INF);
+      ASSERT_DEATH(val %= eint::NINF, ".* failed.");
+   }
+   {
+      ExtInt val(eint::NINF);
+      ASSERT_DEATH(val %= eint::INF, ".* failed.");
+   }
+   {
+      ExtInt val(eint::NINF);
+      ASSERT_DEATH(val %= eint::NINF, ".* failed.");
+   }
+}
