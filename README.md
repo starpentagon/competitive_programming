@@ -352,3 +352,8 @@
 * Prefix: rolling-hash-class
 * Description: 文字列のRolling Hash生成(部分文字列の一致判定、最長共通部分列(LCP)の長さなど)
 * 計算量: -
+
+## Smart String
+* Prefix: smart-string-class
+* Description: 文字列の置換/包含判定
+* 計算量: -
