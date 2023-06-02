@@ -43,3 +43,58 @@ TEST(RollingHashTest, LCPTest) {
 
    EXPECT_EQ(5, rolling_hash.lcp(s_hash_list, 0, S.size(), t_hash_list, 0, T.size()));
 }
+
+TEST(SmartStringTest, ConstructorTest) {
+   {
+      SmartString str;
+      EXPECT_EQ(str, "");
+   }
+   {
+      SmartString str("hello world!");
+      EXPECT_EQ(str, "hello world!");
+   }
+}
+
+TEST(SmartStringTest, ContainsTest) {
+   {
+      SmartString str("hello world!");
+      EXPECT_TRUE(str.Contains("world"));
+      EXPECT_FALSE(str.Contains("good"));
+   }
+}
+
+TEST(SmartStringTest, GetReplaceTest) {
+   {
+      SmartString str("hello world!");
+      auto rep_str = str.GetReplace("hello", "good morning");
+      EXPECT_EQ(rep_str, "good morning world!");
+   }
+   {
+      SmartString str("ABC");
+      auto rep_str = str.GetReplace("a", "b");
+      EXPECT_EQ(rep_str, "ABC");
+   }
+   {
+      SmartString str("ABC");
+      auto rep_str = str.GetReplace("A", "B");
+      EXPECT_EQ(rep_str, "BBC");
+   }
+}
+
+TEST(SmartStringTest, ReplaceTest) {
+   {
+      SmartString str("hello world!");
+      str.Replace("hello", "good morning");
+      EXPECT_EQ(str, "good morning world!");
+   }
+   {
+      SmartString str("ABC");
+      str.Replace("a", "b");
+      EXPECT_EQ(str, "ABC");
+   }
+   {
+      SmartString str("ABC");
+      str.Replace("A", "B");
+      EXPECT_EQ(str, "BBC");
+   }
+}

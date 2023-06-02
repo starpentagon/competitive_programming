@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <string>
+#include <regex>
 #include <vector>
 #include <random>
 
@@ -97,3 +98,44 @@ class RollingHash {
    }
 };
 // [End] Rolling Hash
+
+// [Start] Smart string
+// [Prefix] smart-string-class
+class SmartString
+    : public string {
+  public:
+   SmartString();
+   SmartString(const string &str);
+
+   // 文字列strを含んでいるか判定する
+   bool Contains(const string &str) const noexcept;
+
+   // 指定した文字をすべて置換する(破壊的に変更)
+   void Replace(const string &from, const string &to);
+
+   // 指定した文字をすべて置換した文字列を取得する(元の文字列は変更せず)
+   SmartString GetReplace(const string &from, const string &to) const;
+};
+
+SmartString::SmartString() {
+}
+
+SmartString::SmartString(const string &str)
+    : string(str) {
+}
+
+bool SmartString::Contains(const string &str) const noexcept {
+   auto find_it = find(str);
+   return find_it != string::npos;
+}
+
+SmartString SmartString::GetReplace(const string &from, const string &to) const {
+   SmartString rep_str = regex_replace(*this, regex(from), to);
+   return rep_str;
+}
+
+void SmartString::Replace(const string &from, const string &to) {
+   *this = GetReplace(from, to);
+}
+
+// [End] Smart string
