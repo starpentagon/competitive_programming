@@ -32,15 +32,15 @@ void GridDirection() {
    // [Prefix] grid-direction-inline
 // Gridの移動方向の定義
 vector<pair<long long, long long>> dir_list = {
-      make_pair(-1, 0),  // 上
-      make_pair(1, 0),   // 下
       make_pair(0, -1),  // 左
+      make_pair(-1, 0),  // 上
       make_pair(0, 1),   // 右
+      make_pair(1, 0),   // 下
 
       make_pair(-1, -1),  // 左上
       make_pair(-1, 1),   // 右上
-      make_pair(1, -1),   // 左下
       make_pair(1, 1),    // 右下
+      make_pair(1, -1),   // 左下
 };
 
    // [End] Grid direction
