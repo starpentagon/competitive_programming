@@ -128,9 +128,8 @@ struct HashPair {
 // [Start] Macros/Templates
 // [Prefix] macro-templates
 // clang-format off
-#define rep1(i, n) for (int i = 0; (i) < (int)(n); (i)++)
-#define rep2(i, s, n) for (int i = s; (i) < (int)(n); (i)++)
-#define rep(...) overload4(__VA_ARGS__,rep2,rep1)(__VA_ARGS__)
+#define rep(i, n) for (int i = 0; (i) < (int)(n); (i)++)
+#define repp(i, s, n) for (int i = s; (i) < (int)(n); (i)++)
 
 #define all(v) begin(v),end(v)
 #define rall(v) rbegin(v),rend(v)
