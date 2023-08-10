@@ -128,7 +128,12 @@ struct HashPair {
 // [Start] Macros/Templates
 // [Prefix] macro-templates
 // clang-format off
-#define rep(i, n) for (int i = 0; (i) < (int)(n); (i)++)
+#define rep1(i, n) for (int i = 0; (i) < (int)(n); (i)++)
+#define rep2(i, s, n) for (int i = s; (i) < (int)(n); (i)++)
+#define rep(...) overload4(__VA_ARGS__,rep2,rep1)(__VA_ARGS__)
+
+#define all(v) begin(v),end(v)
+#define rall(v) rbegin(v),rend(v)
 
 template<class T> bool chmax(T &a, const T &b) {if(a<b) {a=b; return true;} return false; }
 template<class T> bool chmin(T &a, const T &b) {if(a>b) {a=b; return true;} return false; }
