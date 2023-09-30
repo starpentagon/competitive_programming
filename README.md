@@ -102,44 +102,44 @@
 * Prefix: g-shortest-dijkstra
 * Description: ダイクストラ法で単一始点最短路を求める
 * Note: 枝の重みがすべて非負の場合に適用可能
-* 計算量: $O(E + N log N)$
+* 計算量: $O(E + N \log N)$
 
 ### Bellman-Ford法
 * Prefix: g-shortest-bellman
 * Description: Bellman-Ford法で単一始点最短路を求める
 * Note: 枝の重みが負の場合も適用可能
-* 計算量: O(N * E)
+* 計算量: $O(N * E)$
 
 ### Warshall Floyd法
 * Prefix: g-shortest-warshall
 * Description: Warshall Floyd法で全点最短路を求める
 * Note: 枝の重みが負の場合も適用可能
-* 計算量: O(N^3)
+* 計算量: $O(N^3)$
 
 ### 最短経路の抽出
 * Prefix: g-find-shortest-path-func
 * Description: 最短距離からノード間の最短経路を算出する
-* 計算量: O(E)
+* 計算量: $O(E)$
 
 ## トポロジカルソート
 * Prefix: g-topological-sort-func
 * Description: トポロジカルソートを求める。DAGの判定も行える。
-* 計算量: O(N + E)
+* 計算量: $O(N + E)$
 
 ## 閉路検出(無向グラフ)
 * Prefix: g-loop-undirected-detection
 * Description: 連結成分ごとに閉路を検出し、存在すればその隣接関係を返す
-* 計算量: O(N + E)
+* 計算量: $O(N + E)$
 
 ## 閉路検出(有向グラフ)
 * Prefix: g-loop-directed-detection
 * Description: 連結成分ごとに閉路を検出し、存在すればその隣接関係を返す
-* 計算量: O(N + E)
+* 計算量: $O(N + E)$
 
 ## 最長路
 * Prefix: g-longest-path-func
 * Description: DAGにおける最長路を求める
-* 計算量: O(N + E)
+* 計算量: $O(N + E)$
 
 ## 閉路上での移動
 * Prefix: g-move-on-loop-func
