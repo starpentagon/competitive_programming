@@ -183,6 +183,15 @@
 * パスの長さ: O(1)
 * パス上の辺, 頂点の重みの合計: (O(log N)), 重みの更新がなければセグメント木を累積和に変えることでO(1)に高速化
 
+## 木でのダブリング
+* Prefix: g-doubling-tree-class
+
+### LCA
+* 計算量: 前処理 O(N log N), クエリ O(log N)
+
+### 2頂点間の距離、重みの合計、最大の重み、最小の重み
+* 計算量: 前処理 O(N log N), クエリ O(log N)
+
 ## 強連結成分分解(Strongly Connected Components, SCC)
 * Prefix: g-scc-class
 * Description: 強連結成分を求める。強連結成分はトポロジカルソート済
