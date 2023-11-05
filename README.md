@@ -321,6 +321,11 @@
 * Description: ランレングス圧縮を行う
 * 計算量: O(N)
 
+## 進数変換
+* Prefix: base-conversion-class
+* Description: b進数へ変換する
+* 計算量: O(log_b N)
+
 ## std::pairのHash関数
 * Prefix: hash-pair-struct
 * Description: std::pair型のハッシュ関数

@@ -1,8 +1,10 @@
 #pragma once
 
+#include <algorithm>
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <cassert>
 
 using namespace std;
 
@@ -142,3 +144,101 @@ template<class T> ostream& operator<<(ostream& os, vector<T>& vec){ rep(i, vec.s
 // clang-format on
 
 // [End] Macros/Templates
+
+// [Start] Base Conversion
+// [Prefix] base-conversion-class
+// [Verified] 10進数 -> 2進数, N <= 10^18: ABC234「C - Happy New Year!」(https://atcoder.jp/contests/abc234/tasks/abc234_c)
+class BaseConversion {
+  public:
+   BaseConversion(unsigned long long base_10_val);
+   BaseConversion(int base, const vector<int>& digits);
+   BaseConversion(int base, const string& digit_str);
+
+   // 指定の基数で表現した文字列を返す
+   string GetBaseStr(int base) const;
+
+   // 指定の基数で表現した数値列を返す
+   vector<int> GetBaseDigitList(int base) const;
+
+   // 10進数での値を返す
+   unsigned long long GetBase10Val() const;
+
+  protected:
+   unsigned long long base_10_val_;  // 10進数での値
+};
+
+BaseConversion::BaseConversion(unsigned long long base_10_val)
+    : base_10_val_(base_10_val) {
+}
+
+BaseConversion::BaseConversion(int base, const vector<int>& digits)
+    : base_10_val_(0) {
+   assert(2 <= base && base <= 36);
+
+   for (auto d : digits) {
+      assert(0 <= d && d < base);
+      base_10_val_ *= base;
+      base_10_val_ += d;
+   }
+}
+
+BaseConversion::BaseConversion(int base, const string& digit_str)
+    : base_10_val_(0) {
+   assert(2 <= base && base <= 36);
+
+   for (auto c : digit_str) {
+      int d = 0;
+      if ('0' <= c && c <= '9') {
+         d = c - '0';
+      } else if ('A' <= c && c <= 'Z') {
+         d = c - 'A' + 10;
+      } else {
+         assert(false);
+      }
+
+      assert(0 <= d && d < base);
+      base_10_val_ *= base;
+      base_10_val_ += d;
+   }
+}
+
+vector<int> BaseConversion::GetBaseDigitList(int base) const {
+   assert(2 <= base && base <= 36);
+   vector<int> digits;
+
+   if (base_10_val_ == 0) {
+      digits.push_back(0);
+      return digits;
+   }
+
+   auto val = base_10_val_;
+
+   while (val > 0) {
+      digits.push_back(val % base);
+      val /= base;
+   }
+
+   reverse(digits.begin(), digits.end());
+   return digits;
+}
+
+string BaseConversion::GetBaseStr(int base) const {
+   auto digits = GetBaseDigitList(base);
+   string ret;
+
+   for (auto d : digits) {
+      if (d < 10) {
+         ret += '0' + d;
+      } else {
+         ret += 'A' + d - 10;
+      }
+   }
+
+   return ret;
+}
+
+unsigned long long BaseConversion::GetBase10Val() const {
+   return base_10_val_;
+}
+
+// [End] Base Conversion
