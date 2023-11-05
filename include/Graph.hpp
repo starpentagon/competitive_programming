@@ -1287,3 +1287,82 @@ vector<vector<int>> StronglyConnectedComponents::GetSCCNoedGroup() const {
 }
 
 // [End] Strongly Connected Components
+
+void BipartileCheckDFS() {
+   int N = 1;
+
+   // clang-format off
+   // [Start] Bipartile Check(DFS)
+   // [Prefix] g-bipartite-dfs-inline
+   // cur_vを含む連結成分が二部グラフかを判定する。
+   // 計算量: O(N + E)
+   // node_color配列に
+   //    -1: 未訪問, 0: 赤, 1: 青
+   // を対応させる
+   // [Verified] N, E <= 2 x 10^5: ABC327「D - Good Tuple Problem」(https://atcoder.jp/contests/abc327/tasks/abc327_d)
+   // 参考: https://qiita.com/drken/items/a803d4fc4a727e02f7ba#4-3-%E4%BA%8C%E9%83%A8%E3%82%B0%E3%83%A9%E3%83%95%E5%88%A4%E5%AE%9A
+   vector<int> node_color(N + 1, -1);
+
+   auto dfs = [&](auto dfs, int cur_v, int p_color) -> bool {
+      // cur_v:
+      // p_color: 親の色
+      if (node_color[cur_v] != -1) {
+         // すでに訪問済み
+         return true;
+      }
+
+      int color = 1 - p_color;
+      node_color[cur_v] = color;
+
+      for (auto n_v : adj_list[cur_v]) {
+         if (node_color[n_v] != -1) {
+            if (node_color[n_v] == color) {
+               // 同じ色が隣接していたら二部グラフではない
+               return false;
+            }
+            continue;
+         }
+
+         auto res = dfs(dfs, n_v, color);
+
+         if (!res) {
+            return false;
+         }
+      }
+
+      return true;
+   };
+   // [End] Bipartile Check(DFS)
+   // clang-format on
+}
+
+// [Start] Bipartile Check(UnionFind)
+// [Prefix] g-bipartite-uf-func
+// 与えられたグラフが二部グラフかを判定する。
+// 計算量: O(N + E alpha(N))
+// 依存ライブラリ: UnionFind
+// [Verified] N, E <= 2 x 10^5: ABC327「D - Good Tuple Problem」(https://atcoder.jp/contests/abc327/tasks/abc327_d)
+// 参考: https://noshi91.hatenablog.com/entry/2018/04/17/183132
+bool BipartileCheckUF(int N, const vector<pair<int, int>>& edge_list) {
+   // 頂点倍化グラフ(V -> V_a, V_b)を考える
+   UnionFind uf(2 * N + 1);
+
+   for (auto [u, v] : edge_list) {
+      // 枝(u, v)に対して(a_v, b_u), (a_u, b_v)を結ぶ
+      int a_u = u, a_v = v;
+      int b_u = u + N, b_v = v + N;
+
+      uf.Unite(a_u, b_v);
+      uf.Unite(a_v, b_u);
+   }
+
+   for (int v = 1; v <= N; v++) {
+      if (uf.IsSameGroup(v, v + N)) {
+         // vが同じグループに属する -> 二部グラフではない
+         return false;
+      }
+   }
+
+   return true;
+}
+// [End] Bipartile Check(UnionFind)

@@ -77,7 +77,7 @@
 # UnionFindライブラリ
 
 ## UnionFindクラス
-* Prefix: uf-class
+* Prefix: union-find-class
 * Description: UnionFindクラス
 * 計算量: -
 
@@ -135,6 +135,18 @@
 * Prefix: g-loop-directed-detection
 * Description: 連結成分ごとに閉路を検出し、存在すればその隣接関係を返す
 * 計算量: $O(N + E)$
+
+## 二部グラフ
+### DFSによる判定
+* Prefix: g-bipartite-dfs-inline
+* Description: 指定したノードを含む連結成分が二部グラフかどうかを判定する
+* 計算量: $O(N + E)$
+
+### 頂点倍化 + UnionFindによる判定
+* Prefix: g-bipartite-uf-func
+* Description: グラフが二部グラフかどうかを判定する
+* 計算量: $O(N + E alpha(N))$
+* 依存ライブラリ: UnionFind(union-find-class)
 
 ## 最長路
 * Prefix: g-longest-path-func
