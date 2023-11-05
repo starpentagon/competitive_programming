@@ -1288,11 +1288,11 @@ vector<vector<int>> StronglyConnectedComponents::GetSCCNoedGroup() const {
 
 // [End] Strongly Connected Components
 
-void BipartileCheckDFS() {
+void BipartiteCheckDFS() {
    int N = 1;
 
    // clang-format off
-   // [Start] Bipartile Check(DFS)
+   // [Start] Bipartite Check(DFS)
    // [Prefix] g-bipartite-dfs-inline
    // cur_vを含む連結成分が二部グラフかを判定する。
    // 計算量: O(N + E)
@@ -1332,18 +1332,18 @@ void BipartileCheckDFS() {
 
       return true;
    };
-   // [End] Bipartile Check(DFS)
+   // [End] Bipartite Check(DFS)
    // clang-format on
 }
 
-// [Start] Bipartile Check(UnionFind)
+// [Start] Bipartite Check(UnionFind)
 // [Prefix] g-bipartite-uf-func
 // 与えられたグラフが二部グラフかを判定する。
 // 計算量: O(N + E alpha(N))
 // 依存ライブラリ: UnionFind
 // [Verified] N, E <= 2 x 10^5: ABC327「D - Good Tuple Problem」(https://atcoder.jp/contests/abc327/tasks/abc327_d)
 // 参考: https://noshi91.hatenablog.com/entry/2018/04/17/183132
-bool BipartileCheckUF(int N, const vector<pair<int, int>>& edge_list) {
+bool BipartiteCheckUF(int N, const vector<pair<int, int>>& edge_list) {
    // 頂点倍化グラフ(V -> V_a, V_b)を考える
    UnionFind uf(2 * N + 1);
 
@@ -1365,4 +1365,4 @@ bool BipartileCheckUF(int N, const vector<pair<int, int>>& edge_list) {
 
    return true;
 }
-// [End] Bipartile Check(UnionFind)
+// [End] Bipartite Check(UnionFind)
