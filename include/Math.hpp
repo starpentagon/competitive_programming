@@ -625,3 +625,57 @@ pair<long long, long long> sqrt_int(long long n) {
    return {x, x + 1};
 }
 // [End] floor/ceil of sqrt(n)
+
+// [Start] next combination
+// [Prefix] next-combination
+// [Verified] 28 C 7 = 1,184,040, ABC_328「E - Modulo MST」(https://atcoder.jp/contests/abc328/tasks/abc328_e)
+// 参考: https://yak-ex.blogspot.com/2014/05/c-nextcombination.html
+template <typename FI>
+void parted_rotate(FI first1, FI last1, FI first2, FI last2) {
+   if (first1 == last1 || first2 == last2) return;
+   FI next = first2;
+   while (first1 != next) {
+      std::iter_swap(first1++, next++);
+      if (first1 == last1) first1 = first2;
+      if (next == last2) {
+         next = first2;
+      } else if (first1 == first2) {
+         first2 = next;
+      }
+   }
+}
+
+template <typename BI>
+bool next_combination_imp(BI first1, BI last1, BI first2, BI last2) {
+   if (first1 == last1 || first2 == last2) return false;
+   auto target = last1;
+   --target;
+   auto last_elem = last2;
+   --last_elem;
+
+   while (target != first1 && !(*target < *last_elem)) --target;
+   if (target == first1 && !(*target < *last_elem)) {
+      parted_rotate(first1, last1, first2, last2);
+      return false;
+   }
+
+   auto next = first2;
+   while (!(*target < *next)) ++next;
+   std::iter_swap(target++, next++);
+   parted_rotate(target, last1, next, last2);
+   return true;
+}
+
+// リストからK個の要素を選ぶ場合: next_combination(list.begin(), list.begin()+K, list.end());
+// リストの先頭K要素が組合せになる
+// @pre listはソート済みであること
+template <typename BI>
+inline bool next_combination(BI first, BI mid, BI last) {
+   return next_combination_imp(first, mid, mid, last);
+}
+
+template <typename BI>
+inline bool prev_combination(BI first, BI mid, BI last) {
+   return next_combination_imp(mid, last, first, mid);
+}
+// [End] next combination

@@ -58,6 +58,10 @@
 * Description: 有理数を管理する
 * 計算量: O(1), 通分をする場合は O(log min(a, b))
 
+## 組合せの列挙
+* Prefix: next-combination
+* Description: 組合せを列挙する
+
 # ModIntライブラリ(ModInt.code-snippets)
 ## MODをコンパイル時に指定
 * Prefix: mod-int-static-class
