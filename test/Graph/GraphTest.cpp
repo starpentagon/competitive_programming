@@ -383,3 +383,73 @@ TEST(GraphTest, TestSCC) {
       EXPECT_EQ(scc_nodes[1][2], 6);
    }
 }
+
+TEST(GraphTest, GetPruferSequenceTest) {
+   {
+      int N = 6;
+      vector<pair<int, int>> edge_list;
+
+      edge_list.emplace_back(1, 4);
+      edge_list.emplace_back(2, 4);
+      edge_list.emplace_back(3, 4);
+      edge_list.emplace_back(4, 5);
+      edge_list.emplace_back(5, 6);
+
+      auto prufer_seq = GetPruferSequence(N, edge_list);
+
+      ASSERT_EQ(N - 2, prufer_seq.size());
+
+      ASSERT_EQ(4, prufer_seq[0]);
+      ASSERT_EQ(4, prufer_seq[1]);
+      ASSERT_EQ(4, prufer_seq[2]);
+      ASSERT_EQ(5, prufer_seq[3]);
+   }
+   {
+      int N = 5;
+      vector<pair<int, int>> edge_list;
+
+      edge_list.emplace_back(1, 3);
+      edge_list.emplace_back(1, 4);
+      edge_list.emplace_back(1, 5);
+      edge_list.emplace_back(2, 5);
+
+      auto prufer_seq = GetPruferSequence(N, edge_list);
+
+      ASSERT_EQ(N - 2, prufer_seq.size());
+
+      ASSERT_EQ(5, prufer_seq[0]);
+      ASSERT_EQ(1, prufer_seq[1]);
+      ASSERT_EQ(1, prufer_seq[2]);
+   }
+}
+
+TEST(GraphTest, GetTree) {
+   using P = pair<int, int>;
+
+   {
+      int N = 6;
+      vector<int> prufer_seq{4, 4, 4, 5};
+
+      auto edge_list = GetTree(N, prufer_seq);
+
+      ASSERT_EQ(N - 1, edge_list.size());
+      ASSERT_EQ(P(1, 4), edge_list[0]);
+      ASSERT_EQ(P(2, 4), edge_list[1]);
+      ASSERT_EQ(P(3, 4), edge_list[2]);
+      ASSERT_EQ(P(4, 5), edge_list[3]);
+      ASSERT_EQ(P(5, 6), edge_list[4]);
+   }
+
+   {
+      int N = 5;
+      vector<int> prufer_seq{5, 1, 1};
+
+      auto edge_list = GetTree(N, prufer_seq);
+
+      ASSERT_EQ(N - 1, edge_list.size());
+      ASSERT_EQ(P(2, 5), edge_list[0]);
+      ASSERT_EQ(P(3, 1), edge_list[1]);
+      ASSERT_EQ(P(4, 1), edge_list[2]);
+      ASSERT_EQ(P(1, 5), edge_list[3]);
+   }
+}

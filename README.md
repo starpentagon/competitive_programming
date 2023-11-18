@@ -200,6 +200,10 @@
 * Prefix: g-scc-class
 * Description: 強連結成分を求める。強連結成分はトポロジカルソート済
 
+## Prufer列によるラベル付き木の列挙
+* Prefix: g-prufer-tree-func
+* 木とPrufer列の相互変換、ラベル付き木の列挙
+
 # Grid操作
 
 ## Gridのロード

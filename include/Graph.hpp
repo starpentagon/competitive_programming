@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include <vector>
+#include <set>
 #include <queue>
 #include <stack>
 #include <unordered_map>
@@ -1290,6 +1291,7 @@ vector<vector<int>> StronglyConnectedComponents::GetSCCNoedGroup() const {
 
 void BipartiteCheckDFS() {
    int N = 1;
+   vector<vector<int>> adj_list;
 
    // clang-format off
    // [Start] Bipartite Check(DFS)
@@ -1687,3 +1689,153 @@ long long DoublingOnTree::CalcPathWeight(const int u, const int v) {
 }
 
 // [End] Doubling(Tree)
+
+// [Start] Prufer sequence
+// [Prefix] g-prufer-tree-func
+
+// 木からPrufer sequenceを求める
+// @param N 頂点数
+// @param edge_list 辺リスト(1-indexed)
+// @retval Prufer sequence(長さN-2)
+// 計算量: O(N log N)
+vector<int> GetPruferSequence(int N, const vector<pair<int, int>>& edge_list) {
+   assert(N >= 2);
+   assert((int)edge_list.size() == N - 1);
+
+   vector<set<int>> adj_list(N + 1);
+   vector<int> degree(N + 1, 0);
+
+   for (auto [u, v] : edge_list) {
+      degree[u]++;
+      degree[v]++;
+
+      adj_list[u].emplace(v);
+      adj_list[v].emplace(u);
+   }
+
+   set<int> leaf_nodes;
+
+   for (int v = 1; v <= N; v++) {
+      if (degree[v] == 1) {
+         leaf_nodes.emplace(v);
+      }
+   }
+
+   vector<int> prufer_seq(N - 2, 0);
+
+   for (int i = 0; i < N - 2; i++) {
+      assert(!leaf_nodes.empty());
+      auto leaf_node = *leaf_nodes.begin();
+
+      assert(adj_list[leaf_node].size() == 1);
+      int next_node = *(adj_list[leaf_node].begin());
+
+      prufer_seq[i] = next_node;
+
+      degree[next_node]--;
+      adj_list[next_node].erase(leaf_node);
+
+      leaf_nodes.erase(leaf_node);
+
+      if (degree[next_node] == 1) {
+         leaf_nodes.emplace(next_node);
+      }
+   }
+
+   return prufer_seq;
+}
+
+// Prufer sequenceから木を求める
+// @param N 頂点数
+// @param prufer_sequence Prufer列(頂点番号は1-indexed)
+// @retval 辺(頂点pair)リスト(1-indexed)
+// 計算量: O(N log N)
+vector<pair<int, int>> GetTree(int N, const vector<int>& prufer_sequence) {
+   assert(N >= 2);
+   assert((int)prufer_sequence.size() == N - 2);
+
+   vector<int> degree(N + 1, 1);
+
+   for (auto v : prufer_sequence) {
+      degree[v]++;
+   }
+
+   set<int> leaf_nodes;
+
+   for (int v = 1; v <= N; v++) {
+      if (degree[v] == 1) {
+         leaf_nodes.emplace(v);
+      }
+   }
+
+   vector<pair<int, int>> edge_list;
+
+   for (auto v : prufer_sequence) {
+      assert(1 <= v && v <= N);
+
+      assert(!leaf_nodes.empty());
+      auto leaf_node = *leaf_nodes.begin();
+
+      edge_list.emplace_back(leaf_node, v);
+
+      degree[leaf_node]--;
+      degree[v]--;
+
+      leaf_nodes.erase(leaf_node);
+
+      if (degree[v] == 1) {
+         leaf_nodes.emplace(v);
+      }
+   }
+
+   assert(leaf_nodes.size() == 2);
+   auto leaf_node_1 = *leaf_nodes.begin();
+   auto leaf_node_2 = *leaf_nodes.rbegin();
+
+   edge_list.emplace_back(leaf_node_1, leaf_node_2);
+
+   return edge_list;
+}
+
+// ラベル付き木を列挙する
+// @param N 頂点数
+// @retval ラベル付き木の辺(頂点ペア)のリストのリスト
+// @note ラベル付き木の数はN^(N-2)個, N=10で10^8になるので注意
+// [Verified] N<=8, ABC_328「E - Modulo MST」(https://atcoder.jp/contests/abc328/tasks/abc328_e)
+vector<vector<pair<int, int>>> EnumerateTrees(int N) {
+   if (N <= 1) {
+      return vector<vector<pair<int, int>>>({{}});
+   }
+
+   assert(N <= 10);  // N > 10だと計算量が多すぎるためREにする
+
+   long long tree_count = 1;
+
+   for (int i = 0; i < N - 2; i++) {
+      tree_count *= N;
+   }
+
+   vector<vector<pair<int, int>>> tree_list;
+   tree_list.reserve(tree_count);
+
+   auto calc_prufer_seq = [&](int tree_ind) -> vector<int> {
+      vector<int> prufer_seq(N - 2, 0);
+
+      for (int i = 0; i < N - 2; i++) {
+         prufer_seq[i] = (tree_ind % N) + 1;
+         tree_ind /= N;
+      }
+
+      return prufer_seq;
+   };
+
+   for (int tree_ind = 0; tree_ind < tree_count; tree_ind++) {
+      auto prufer_seq = calc_prufer_seq(tree_ind);
+      auto edge_list = GetTree(N, prufer_seq);
+
+      tree_list.emplace_back(edge_list);
+   }
+
+   return tree_list;
+}
+// [End] Prufer sequence
