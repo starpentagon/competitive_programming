@@ -98,3 +98,17 @@ TEST(SmartStringTest, ReplaceTest) {
       EXPECT_EQ(str, "BBC");
    }
 }
+
+TEST(SmartStringTest, IsSubsequenceTest) {
+   {
+      SmartString str("hello world!");
+      ASSERT_TRUE(str.IsSubsequence("hello"));
+      ASSERT_TRUE(str.IsSubsequence("hw!"));
+      ASSERT_FALSE(str.IsSubsequence("hw!d"));
+   }
+   {
+      SmartString str("abc");
+      ASSERT_TRUE(str.IsSubsequence("abc"));
+      ASSERT_FALSE(str.IsSubsequence("abcd"));
+   }
+}

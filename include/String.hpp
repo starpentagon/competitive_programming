@@ -113,6 +113,9 @@ class SmartString
    // 指定した文字をすべて置換する(破壊的に変更)
    void Replace(const string &from, const string &to);
 
+   // strがこの文字列の部分列(連続しなくてもよいが順序を保った文字列を含んでいる)かを返す
+   bool IsSubsequence(const string &str) const noexcept;
+
    // 指定した文字をすべて置換した文字列を取得する(元の文字列は変更せず)
    SmartString GetReplace(const string &from, const string &to) const;
 };
@@ -136,6 +139,28 @@ SmartString SmartString::GetReplace(const string &from, const string &to) const 
 
 void SmartString::Replace(const string &from, const string &to) {
    *this = GetReplace(from, to);
+}
+
+// strがこの文字列の部分列(連続しなくてもよいが順序を保った文字列を含んでいる)かを返す
+bool SmartString::IsSubsequence(const string &str) const noexcept {
+   const string &s = *this;
+
+   int M = s.size();
+   int N = str.size();
+   if (M < N) return false;
+
+   int s_i = 0;
+
+   for (int str_i = 0; str_i < N; str_i++) {
+      while (s_i < M && s[s_i] != str[str_i]) {
+         s_i++;
+      }
+
+      if (s_i == M) return false;
+      s_i++;
+   }
+
+   return true;
 }
 
 // [End] Smart string
