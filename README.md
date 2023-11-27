@@ -241,8 +241,8 @@
 # RangeQuery
 ## SegmentTree
 * Prefix: seg-tree-class
-* Description: セグメント木の構築、一点更新、最大／最小／XOR等のRange query
-* 計算量: 構築 O(N), 一点更新 O(log N), Range Query O(log N)
+* Description: セグメント木の構築、一点更新、最大／最小／XOR等のRange query, セグメント木上での二分探索
+* 計算量: 構築 O(N), 一点更新 O(log N), Range Query O(log N), 二分探索 O(log N)
 
 ## SegmentTree用の演算子
 * Prefix: seg-oper-min/max/sum/xor-inline

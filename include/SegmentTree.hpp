@@ -48,6 +48,62 @@ class SegmentTree {
       );
    }
 
+   // 添え字区間[a, b)におけるx以下の最小の添え字を返す(存在しない場合は-1を返す)
+   // @note operがminであること
+   // [Verified] N, Q<= 2*10^5, ABC_330「E - Mex and Update」(https://atcoder.jp/contests/abc330/tasks/abc330_e)
+   int find_leftest_leq(size_t a, size_t b, X x) const {
+      return sub_find_leftest_leq(a, b,
+                                  x,
+                                  0,          // ルートノード
+                                  0,          // 0番目以上
+                                  leaf_size_  // n番目未満
+      );
+   }
+
+   // 添え字区間[a, b)におけるx以下の最大の添え字を返す(存在しない場合は-1を返す)
+   // @note operがminであること
+   int find_rightest_leq(size_t a, size_t b, X x) const {
+      return sub_find_rightest_leq(a, b,
+                                   x,
+                                   0,          // ルートノード
+                                   0,          // 0番目以上
+                                   leaf_size_  // n番目未満
+      );
+   }
+
+   // 添え字区間[a, b)におけるx以上の最小の添え字を返す(存在しない場合は-1を返す)
+   // @note operがmaxであること
+   int find_leftest_geq(size_t a, size_t b, X x) const {
+      return sub_find_leftest_geq(a, b,
+                                  x,
+                                  0,          // ルートノード
+                                  0,          // 0番目以上
+                                  leaf_size_  // n番目未満
+      );
+   }
+
+   // 添え字区間[a, b)におけるx以上の最大の添え字を返す(存在しない場合は-1を返す)
+   // @note operがmaxであること
+   int find_rightest_geq(size_t a, size_t b, X x) const {
+      return sub_find_rightest_geq(a, b,
+                                   x,
+                                   0,          // ルートノード
+                                   0,          // 0番目以上
+                                   leaf_size_  // n番目未満
+      );
+   }
+
+   // 添え字区間[a, b)における[a, i]の合計がx以上になる最小の添え字を返す(存在しない場合は-1を返す)
+   // @note operがsumであること, 各要素が非負であること
+   int find_leftest_sum_geq(size_t a, size_t b, X x) const {
+      return sub_find_leftest_sum_geq(a, b,
+                                      x,
+                                      0,          // ルートノード
+                                      0,          // 0番目以上
+                                      leaf_size_  // n番目未満
+      );
+   }
+
   private:
    // i番目の要素の値を設定する
    // @note 親ノードの更新は行わない。初期構築時に利用。
@@ -68,6 +124,21 @@ class SegmentTree {
    // @param k 現在のノード位置
    // @param [l, r) data_[k]が表している区間
    X sub_query(size_t a, size_t b, size_t k, size_t l, size_t r) const;
+
+   // 添え字区間[a, b)におけるx以下の最小の添え字を返す
+   int sub_find_leftest_leq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) const;
+
+   // 添え字区間[a, b)におけるx以下の最大の添え字を返す
+   int sub_find_rightest_leq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) const;
+
+   // 添え字区間[a, b)におけるx以上の最小の添え字を返す
+   int sub_find_leftest_geq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) const;
+
+   // 添え字区間[a, b)におけるx以上の最大の添え字を返す
+   int sub_find_rightest_geq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) const;
+
+   // 添え字区間[a, b)における[a, i)の合計がx以上になる最小の添え字を返す
+   int sub_find_leftest_sum_geq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) const;
 
    vector<X> data_;  // 完全二分木を格納する配列
    function<X(X, X)> oper_;
@@ -134,6 +205,108 @@ X SegmentTree<X>::sub_query(size_t a, size_t b, size_t k, size_t l, size_t r) co
       return oper_(val_l, val_r);
    }
 }
+
+template <class X>
+int SegmentTree<X>::sub_find_leftest_leq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) const {
+   if (!(data_[k] <= x) || r <= a || b <= l) {
+      // 自分の値がxより大きい or [a, b)が[l, r)の範囲外
+      return -1;
+   } else if (k >= leaf_size_ - 1) {
+      // 自分が葉ノード
+      return k - leaf_size_ + 1;
+   } else {
+      // 左の部分木を見てa-1以外ならその値を返す
+      int val_l = sub_find_leftest_leq(a, b, x, k * 2 + 1, l, (l + r) / 2);
+
+      if (val_l != -1) {
+         return val_l;
+      }
+
+      return sub_find_leftest_leq(a, b, x, k * 2 + 2, (l + r) / 2, r);
+   }
+}
+
+template <class X>
+int SegmentTree<X>::sub_find_rightest_leq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) const {
+   if (!(data_[k] <= x) || r <= a || b <= l) {
+      // 自分の値がxより大きい or [a, b)が[l, r)の範囲外
+      return -1;
+   } else if (k >= leaf_size_ - 1) {
+      // 自分が葉ノード
+      return k - leaf_size_ + 1;
+   } else {
+      // 右の部分木を見てa-1以外ならその値を返す
+      int val_r = sub_find_rightest_leq(a, b, x, k * 2 + 2, (l + r) / 2, r);
+
+      if (val_r != -1) {
+         return val_r;
+      }
+
+      return sub_find_rightest_leq(a, b, x, k * 2 + 1, l, (l + r) / 2);
+   }
+}
+
+template <class X>
+int SegmentTree<X>::sub_find_leftest_geq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) const {
+   if (!(data_[k] >= x) || r <= a || b <= l) {
+      // 自分の値がxより小さい or [a, b)が[l, r)の範囲外
+      return -1;
+   } else if (k >= leaf_size_ - 1) {
+      // 自分が葉ノード
+      return k - leaf_size_ + 1;
+   } else {
+      // 左の部分木を見てa-1以外ならその値を返す
+      int val_l = sub_find_leftest_geq(a, b, x, k * 2 + 1, l, (l + r) / 2);
+
+      if (val_l != -1) {
+         return val_l;
+      }
+
+      return sub_find_leftest_geq(a, b, x, k * 2 + 2, (l + r) / 2, r);
+   }
+}
+
+template <class X>
+int SegmentTree<X>::sub_find_rightest_geq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) const {
+   if (!(data_[k] >= x) || r <= a || b <= l) {
+      // 自分の値がxより小さい or [a, b)が[l, r)の範囲外
+      return -1;
+   } else if (k >= leaf_size_ - 1) {
+      // 自分が葉ノード
+      return k - leaf_size_ + 1;
+   } else {
+      // 右の部分木を見てa-1以外ならその値を返す
+      int val_r = sub_find_rightest_geq(a, b, x, k * 2 + 2, (l + r) / 2, r);
+
+      if (val_r != -1) {
+         return val_r;
+      }
+
+      return sub_find_rightest_geq(a, b, x, k * 2 + 1, l, (l + r) / 2);
+   }
+}
+
+template <class X>
+int SegmentTree<X>::sub_find_leftest_sum_geq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) const {
+   if (!(data_[k] >= x) || r <= a || b <= l) {
+      // 自分の値がxより小さい or [a, b)が[l, r)の範囲外
+      return -1;
+   } else if (k >= leaf_size_ - 1) {
+      // 自分が葉ノード
+      return k - leaf_size_ + 1;
+   } else {
+      // 左の部分木を見てa-1以外ならその値を返す
+      int val_l = sub_find_leftest_sum_geq(a, b, x, k * 2 + 1, l, (l + r) / 2);
+
+      if (val_l != -1) {
+         return val_l;
+      }
+
+      X sub_sum = sub_query(a, b, k * 2 + 1, l, (l + r) / 2);
+      return sub_find_leftest_sum_geq(a, b, x - sub_sum, k * 2 + 2, (l + r) / 2, r);
+   }
+}
+
 // [End] Segment Tree
 
 void SegOperMin() {
