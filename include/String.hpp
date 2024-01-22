@@ -110,6 +110,9 @@ class SmartString
    // 文字列strを含んでいるか判定する
    bool Contains(const string &str) const noexcept;
 
+   // 正規表現reg_strを含んでいるか判定する
+   bool ContainsRegex(const string &reg_str) const noexcept;
+
    // 指定した文字をすべて置換する(破壊的に変更)
    void Replace(const string &from, const string &to);
 
@@ -130,6 +133,10 @@ SmartString::SmartString(const string &str)
 bool SmartString::Contains(const string &str) const noexcept {
    auto find_it = find(str);
    return find_it != string::npos;
+}
+
+bool SmartString::ContainsRegex(const string &reg_str) const noexcept {
+   return regex_match(*this, regex(reg_str));
 }
 
 SmartString SmartString::GetReplace(const string &from, const string &to) const {

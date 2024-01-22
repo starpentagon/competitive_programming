@@ -63,6 +63,14 @@ TEST(SmartStringTest, ContainsTest) {
    }
 }
 
+TEST(SmartStringTest, ContainsRegexTest) {
+   {
+      SmartString str("AAC");
+      EXPECT_TRUE(str.ContainsRegex("A*B*C*"));
+      EXPECT_FALSE(str.Contains("A*B+C*"));
+   }
+}
+
 TEST(SmartStringTest, GetReplaceTest) {
    {
       SmartString str("hello world!");
