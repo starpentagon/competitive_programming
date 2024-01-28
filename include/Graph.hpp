@@ -1145,7 +1145,7 @@ class StronglyConnectedComponents {
 
    // 「SCC番号 -> SCCに所属するノード番号リスト」の一覧を返す
    // 計算量: O(1)
-   vector<vector<int>> GetSCCNoedGroup() const;
+   vector<vector<int>> GetSCCNodeGroup() const;
 
   protected:
    // 強連結成分を求める
@@ -1283,7 +1283,7 @@ vector<vector<int>> StronglyConnectedComponents::GetSCCGraph() const {
    return scc_adj_list_;
 }
 
-vector<vector<int>> StronglyConnectedComponents::GetSCCNoedGroup() const {
+vector<vector<int>> StronglyConnectedComponents::GetSCCNodeGroup() const {
    return scc_node_group_;
 }
 
