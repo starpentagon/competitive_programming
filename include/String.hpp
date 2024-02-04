@@ -121,6 +121,9 @@ class SmartString
 
    // 指定した文字をすべて置換した文字列を取得する(元の文字列は変更せず)
    SmartString GetReplace(const string &from, const string &to) const;
+
+   // 指定した文字列で分割を行う
+   vector<string> Split(const string &delim) const;
 };
 
 SmartString::SmartString() {
@@ -168,6 +171,30 @@ bool SmartString::IsSubsequence(const string &str) const noexcept {
    }
 
    return true;
+}
+
+vector<string> SmartString::Split(const string &delim) const {
+   vector<string> result;
+
+   if (delim.empty()) {
+      result.push_back(*this);
+      return result;
+   }
+
+   auto offset = string::size_type(0);
+   while (true) {
+      auto pos = find(delim, offset);
+
+      if (pos == string::npos) {
+         result.push_back(substr(offset));
+         break;
+      }
+
+      result.push_back(substr(offset, pos - offset));
+      offset = pos + delim.size();
+   }
+
+   return result;
 }
 
 // [End] Smart string

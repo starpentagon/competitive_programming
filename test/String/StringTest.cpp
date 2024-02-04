@@ -120,3 +120,29 @@ TEST(SmartStringTest, IsSubsequenceTest) {
       ASSERT_FALSE(str.IsSubsequence("abcd"));
    }
 }
+
+TEST(SmartStringTest, SplitTest) {
+   {
+      SmartString str("hello world!");
+      auto result = str.Split(" ");
+      ASSERT_EQ(result.size(), 2);
+      ASSERT_EQ(result[0], "hello");
+      ASSERT_EQ(result[1], "world!");
+   }
+   {
+      SmartString str("aaababcc");
+      auto result = str.Split("abc");
+      ASSERT_EQ(result.size(), 2);
+      ASSERT_EQ(result[0], "aaab");
+      ASSERT_EQ(result[1], "c");
+   }
+   {
+      SmartString str("a,b,c,");
+      auto result = str.Split(",");
+      ASSERT_EQ(result.size(), 4);
+      ASSERT_EQ(result[0], "a");
+      ASSERT_EQ(result[1], "b");
+      ASSERT_EQ(result[2], "c");
+      ASSERT_EQ(result[3], "");
+   }
+}
