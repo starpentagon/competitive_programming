@@ -204,6 +204,10 @@
 * Prefix: g-prufer-tree-func
 * 木とPrufer列の相互変換、ラベル付き木の列挙
 
+## Link cut tree
+* Prefix: link-cut-tree-class
+* Description: 動的木に対するパスクエリ、uからvへk回移動した頂点などをO(log N)で求められる
+
 # Grid操作
 
 ## Gridのロード
@@ -389,5 +393,10 @@
 
 ## Smart String
 * Prefix: smart-string-class
-* Description: 文字列の置換/包含判定
+* Description: 文字列に対する操作
+  * 包含判定(文字列比較)
+  * 包含判定(正規表現)
+  * 置換
+  * 部分文字列判定
+  * 指定文字で置換
 * 計算量: -

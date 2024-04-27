@@ -139,7 +139,7 @@ bool SmartString::Contains(const string &str) const noexcept {
 }
 
 bool SmartString::ContainsRegex(const string &reg_str) const noexcept {
-   return regex_match(*this, regex(reg_str));
+   return regex_search(*this, regex(reg_str));
 }
 
 SmartString SmartString::GetReplace(const string &from, const string &to) const {
