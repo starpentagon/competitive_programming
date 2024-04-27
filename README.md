@@ -208,6 +208,10 @@
 * Prefix: link-cut-tree-class
 * Description: 動的木に対するパスクエリ、uからvへk回移動した頂点などをO(log N)で求められる
 
+## 反転可能リスト(遅延伝搬反転可能乱択平衡二分木)
+* Prefix: reversible-list-class
+* Description: 要素の追加/削除/更新, 区間和, 区間加算, 反転がO(log N)で可能なデータ構造
+
 # Grid操作
 
 ## Gridのロード
