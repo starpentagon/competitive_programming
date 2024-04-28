@@ -33,32 +33,29 @@ using ull = unsigned long long;
 template <typename Node>
 struct RBSTBase {
    using Ptr = Node *;
+   vector<Ptr> node_ptr_list;
+
    template <typename... Args>
    inline Ptr my_new(Args... args) {
-      return new Node(args...);
+      Ptr ret = new Node(args...);
+      node_ptr_list.push_back(ret);
+
+      return ret;
    }
+
    inline void my_del(Ptr t) {
-      delete t;
    }
+
    inline Ptr make_tree() const {
       return nullptr;
    }
 
-   // memory leakを防ぐためには以下のようにするのが良いが数倍遅くなりTLEすることがある
-   // Note: ABC 350 FではTLEしてしまう
-   /*
-   using Ptr = shared_ptr<Node>;
-
-   template <typename... Args>
-   inline Ptr my_new(Args... args) {
-      return make_shared<Node>(args...);
+   inline void clear() {
+      for (auto ptr : node_ptr_list) {
+         delete ptr;
+      }
+      node_ptr_list.clear();
    }
-   inline void my_del(Ptr t) {
-   }
-   Ptr make_tree() {
-      return Ptr();
-   }
-   */
 
    int size(Ptr t) const {
       return count(t);
@@ -158,6 +155,10 @@ class ReversibleList : RBSTBase<LazyReversibleRBSTNode<T, E>> {
    ReversibleList(const vector<decltype(Node::key)> &v)
        : root_(nullptr) {
       root_ = base::build(v);
+   }
+
+   ~ReversibleList() {
+      base::clear();
    }
 
    int size() {
