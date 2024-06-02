@@ -34,3 +34,31 @@ TEST(UnionTest, TestCCGroup) {
       }
    }
 }
+
+TEST(UnionUndoTest, TestUndo) {
+   UnionFindUndo uf(3);
+
+   uf.Unite(1, 2);
+   EXPECT_FALSE(uf.IsSameGroup(1, 3));
+
+   {
+      auto cc_group = uf.EnumGroup();
+      ASSERT_EQ(cc_group.size(), 2);
+   }
+
+   uf.Unite(2, 3);
+   EXPECT_TRUE(uf.IsSameGroup(1, 3));
+
+   {
+      auto cc_group = uf.EnumGroup();
+      ASSERT_EQ(cc_group.size(), 1);
+   }
+
+   uf.Undo();
+   EXPECT_FALSE(uf.IsSameGroup(1, 3));
+
+   {
+      auto cc_group = uf.EnumGroup();
+      ASSERT_EQ(cc_group.size(), 2);
+   }
+}
