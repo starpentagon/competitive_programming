@@ -85,6 +85,11 @@
 * Description: UnionFindクラス
 * 計算量: -
 
+## Undo可能UnionFindクラス
+* Prefix: union-find-undo-class
+* Description: UnionFindクラス
+* 計算量: -
+
 # グラフライブラリ(Graph.code-snippets)
 
 ## グラフの読み込み
