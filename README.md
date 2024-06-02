@@ -87,7 +87,13 @@
 
 ## Undo可能UnionFindクラス
 * Prefix: union-find-undo-class
-* Description: UnionFindクラス
+* Description: Undo可能なUnionFindクラス
+* 計算量: -
+
+# Offline Dynamic Connectivityライブラリ
+* Prefix: offline-dynamic-connectivity-class
+* Description: オフラインクエリでの追加/削除可能な連結性判定
+* 依存ライブラリ: Undo可能UnionFind(union-find-undo-class)
 * 計算量: -
 
 # グラフライブラリ(Graph.code-snippets)
