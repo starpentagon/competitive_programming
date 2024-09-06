@@ -299,7 +299,8 @@ pair<bool, vector<vector<long long>>> AllShortestPathWarshallFloyd(const vector<
       min_weight_list[node][node] = 0;
 
       for (const auto& [to, weight] : adj_list[node]) {
-         min_weight_list[node][to] = weight;
+         // 多重辺があるため最小の重みを採用
+         min_weight_list[node][to] = min(min_weight_list[node][to], weight);
       }
    }
 
