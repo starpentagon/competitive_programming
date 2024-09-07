@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <limits>
 using namespace std;
 
 void DPFramework() {
@@ -47,8 +48,10 @@ vector<T> LIS(const vector<T>& vals) {
    size_t len = 1;          // 最長増加部分列の長さ
    using P = pair<T, int>;  // (val, index)
 
-   vector<P> dp(N + 1, P(0, -1));  // dp[l]: 長さlの増加部分列の最後の要素の最小値
-   vector<int> pre_pos(N, -1);     // 復元用テーブル: dp[l]を更新した際のdp[l-1]の最小要素の位置を持つ
+   T min_val = numeric_limits<T>::min();
+   P init = P(min_val, -1);
+   vector<P> dp(N + 1, init);   // dp[l]: 長さlの増加部分列の最後の要素の最小値
+   vector<int> pre_pos(N, -1);  // 復元用テーブル: dp[l]を更新した際のdp[l-1]の最小要素の位置を持つ
 
    dp[len] = P(vals[0], 0);
 
