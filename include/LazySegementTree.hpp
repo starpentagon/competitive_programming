@@ -12,6 +12,7 @@ using namespace std;
 // [Verified] Range Add: N, Q<=10^5, Range Add Query(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DSL_2_E&lang=ja)
 // [Verified] Range Update and Range Min: N, Q<=10^5, RMQ and RUQ(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DSL_2_F&lang=ja)
 // [Verified] Range Add and Range Sum: N, Q<=10^5, RSQ and RAQ(https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DSL_2_G&lang=ja)
+
 // 遅延評価セグメント木
 // 計算量
 // - 初期構築 O(N)
@@ -57,6 +58,62 @@ class LazySegmentTree {
       );
    }
 
+   // 添え字区間[a, b)におけるx以下の最小の添え字を返す(存在しない場合は-1を返す)
+   // @note operがminであること
+   int find_leftest_leq(size_t a, size_t b, X x) {
+      return sub_find_leftest_leq(a, b,
+                                  x,
+                                  0,          // ルートノード
+                                  0,          // 0番目以上
+                                  leaf_size_  // n番目未満
+      );
+   }
+
+   // 添え字区間[a, b)におけるx以下の最大の添え字を返す(存在しない場合は-1を返す)
+   // @note operがminであること
+   // [Verified] N, Q<= 2*10^5, ABC_389「F - Rated Range」(https://atcoder.jp/contests/abc389/tasks/abc389_f)
+   int find_rightest_leq(size_t a, size_t b, X x) {
+      return sub_find_rightest_leq(a, b,
+                                   x,
+                                   0,          // ルートノード
+                                   0,          // 0番目以上
+                                   leaf_size_  // n番目未満
+      );
+   }
+
+   // 添え字区間[a, b)におけるx以上の最小の添え字を返す(存在しない場合は-1を返す)
+   // @note operがmaxであること
+   int find_leftest_geq(size_t a, size_t b, X x) {
+      return sub_find_leftest_geq(a, b,
+                                  x,
+                                  0,          // ルートノード
+                                  0,          // 0番目以上
+                                  leaf_size_  // n番目未満
+      );
+   }
+
+   // 添え字区間[a, b)におけるx以上の最大の添え字を返す(存在しない場合は-1を返す)
+   // @note operがmaxであること
+   int find_rightest_geq(size_t a, size_t b, X x) {
+      return sub_find_rightest_geq(a, b,
+                                   x,
+                                   0,          // ルートノード
+                                   0,          // 0番目以上
+                                   leaf_size_  // n番目未満
+      );
+   }
+
+   // 添え字区間[a, b)における[a, i]の合計がx以上になる最小の添え字を返す(存在しない場合は-1を返す)
+   // @note operがsumであること, 各要素が非負であること
+   int find_leftest_sum_geq(size_t a, size_t b, X x) {
+      return sub_find_leftest_sum_geq(a, b,
+                                      x,
+                                      0,          // ルートノード
+                                      0,          // 0番目以上
+                                      leaf_size_  // n番目未満
+      );
+   }
+
   private:
    void update(size_t a, size_t b, M m, size_t k, size_t l, size_t r);
 
@@ -82,6 +139,21 @@ class LazySegmentTree {
    // @param k 現在のノード位置
    // @param [l, r) data_[k]が表している区間
    X sub_query(size_t a, size_t b, size_t k, size_t l, size_t r);
+
+   // 添え字区間[a, b)におけるx以下の最小の添え字を返す
+   int sub_find_leftest_leq(size_t a, size_t b, X x, size_t k, size_t l, size_t r);
+
+   // 添え字区間[a, b)におけるx以下の最大の添え字を返す
+   int sub_find_rightest_leq(size_t a, size_t b, X x, size_t k, size_t l, size_t r);
+
+   // 添え字区間[a, b)におけるx以上の最小の添え字を返す
+   int sub_find_leftest_geq(size_t a, size_t b, X x, size_t k, size_t l, size_t r);
+
+   // 添え字区間[a, b)におけるx以上の最大の添え字を返す
+   int sub_find_rightest_geq(size_t a, size_t b, X x, size_t k, size_t l, size_t r);
+
+   // 添え字区間[a, b)における[a, i)の合計がx以上になる最小の添え字を返す
+   int sub_find_leftest_sum_geq(size_t a, size_t b, X x, size_t k, size_t l, size_t r);
 
    vector<X> data_;  // データを完全二分木を格納する配列
    vector<M> lazy_;  // 遅延評価する値を格納する配列
@@ -191,6 +263,123 @@ X LazySegmentTree<X, M>::sub_query(size_t a, size_t b, size_t k, size_t l, size_
       return oper_(val_l, val_r);
    }
 }
+
+template <class X, class M>
+int LazySegmentTree<X, M>::sub_find_leftest_leq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) {
+   // 遅延評価を反映させる
+   eval(k, r - l);
+
+   if (!(data_[k] <= x) || r <= a || b <= l) {
+      // 自分の値がxより大きい or [a, b)が[l, r)の範囲外
+      return -1;
+   } else if (k >= leaf_size_ - 1) {
+      // 自分が葉ノード
+      return k - leaf_size_ + 1;
+   } else {
+      // 左の部分木を見てa-1以外ならその値を返す
+      int val_l = sub_find_leftest_leq(a, b, x, k * 2 + 1, l, (l + r) / 2);
+
+      if (val_l != -1) {
+         return val_l;
+      }
+
+      return sub_find_leftest_leq(a, b, x, k * 2 + 2, (l + r) / 2, r);
+   }
+}
+
+template <class X, class M>
+int LazySegmentTree<X, M>::sub_find_rightest_leq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) {
+   // 遅延評価を反映させる
+   eval(k, r - l);
+
+   if (!(data_[k] <= x) || r <= a || b <= l) {
+      // 自分の値がxより大きい or [a, b)が[l, r)の範囲外
+      return -1;
+   } else if (k >= leaf_size_ - 1) {
+      // 自分が葉ノード
+      return k - leaf_size_ + 1;
+   } else {
+      // 右の部分木を見てa-1以外ならその値を返す
+      int val_r = sub_find_rightest_leq(a, b, x, k * 2 + 2, (l + r) / 2, r);
+
+      if (val_r != -1) {
+         return val_r;
+      }
+
+      return sub_find_rightest_leq(a, b, x, k * 2 + 1, l, (l + r) / 2);
+   }
+}
+
+template <class X, class M>
+int LazySegmentTree<X, M>::sub_find_leftest_geq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) {
+   // 遅延評価を反映させる
+   eval(k, r - l);
+
+   if (!(data_[k] >= x) || r <= a || b <= l) {
+      // 自分の値がxより小さい or [a, b)が[l, r)の範囲外
+      return -1;
+   } else if (k >= leaf_size_ - 1) {
+      // 自分が葉ノード
+      return k - leaf_size_ + 1;
+   } else {
+      // 左の部分木を見てa-1以外ならその値を返す
+      int val_l = sub_find_leftest_geq(a, b, x, k * 2 + 1, l, (l + r) / 2);
+
+      if (val_l != -1) {
+         return val_l;
+      }
+
+      return sub_find_leftest_geq(a, b, x, k * 2 + 2, (l + r) / 2, r);
+   }
+}
+
+template <class X, class M>
+int LazySegmentTree<X, M>::sub_find_rightest_geq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) {
+   // 遅延評価を反映させる
+   eval(k, r - l);
+
+   if (!(data_[k] >= x) || r <= a || b <= l) {
+      // 自分の値がxより小さい or [a, b)が[l, r)の範囲外
+      return -1;
+   } else if (k >= leaf_size_ - 1) {
+      // 自分が葉ノード
+      return k - leaf_size_ + 1;
+   } else {
+      // 右の部分木を見てa-1以外ならその値を返す
+      int val_r = sub_find_rightest_geq(a, b, x, k * 2 + 2, (l + r) / 2, r);
+
+      if (val_r != -1) {
+         return val_r;
+      }
+
+      return sub_find_rightest_geq(a, b, x, k * 2 + 1, l, (l + r) / 2);
+   }
+}
+
+template <class X, class M>
+int LazySegmentTree<X, M>::sub_find_leftest_sum_geq(size_t a, size_t b, X x, size_t k, size_t l, size_t r) {
+   // 遅延評価を反映させる
+   eval(k, r - l);
+
+   if (!(data_[k] >= x) || r <= a || b <= l) {
+      // 自分の値がxより小さい or [a, b)が[l, r)の範囲外
+      return -1;
+   } else if (k >= leaf_size_ - 1) {
+      // 自分が葉ノード
+      return k - leaf_size_ + 1;
+   } else {
+      // 左の部分木を見てa-1以外ならその値を返す
+      int val_l = sub_find_leftest_sum_geq(a, b, x, k * 2 + 1, l, (l + r) / 2);
+
+      if (val_l != -1) {
+         return val_l;
+      }
+
+      X sub_sum = sub_query(a, b, k * 2 + 1, l, (l + r) / 2);
+      return sub_find_leftest_sum_geq(a, b, x - sub_sum, k * 2 + 2, (l + r) / 2, r);
+   }
+}
+
 // [End] Lazy Segment Tree
 
 void LazySegOper() {
